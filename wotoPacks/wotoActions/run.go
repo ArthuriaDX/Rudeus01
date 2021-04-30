@@ -65,6 +65,7 @@ func RunBot(_token string, c *gin.Context) {
 
 			continue
 		}
+
 		// Now that we know we've gotten a new message, we can construct a
 		// reply! We'll take the Chat ID and Text from the incoming message
 		// and use it to create a new message.
