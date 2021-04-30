@@ -2,9 +2,8 @@
 github.com/gin-gonic/gin
 github.com/gin-gonic/gin/binding
 github.com/gin-gonic/gin/render
-# github.com/heroku/x v0.0.0-20171004170240-705849e307dd
-github.com/heroku/x/hmetrics/onload
-github.com/heroku/x/hmetrics
+# github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.0.0-rc1.0.20210311030851-d0e1dfd8c604
+github.com/go-telegram-bot-api/telegram-bot-api/v5
 # github.com/manucorporat/sse v0.0.0-20150604091100-c142f0f1baea
 github.com/manucorporat/sse
 # github.com/mattn/go-colorable v0.0.0-20150625154642-40e4aedc8fab
