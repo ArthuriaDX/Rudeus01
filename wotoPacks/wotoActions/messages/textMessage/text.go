@@ -18,7 +18,7 @@ func HandleTextMessage(_message *tgbotapi.Message, _settings *appSettings.AppSet
 		"I've got a new `Message!` this one: \n" +
 		_message.Text + "\n" +
 		"from : @" +
-		_message.From.UserName
+		_message.From.UserName + "ArthuriaDX!"
 	// Now that we know we've gotten a new message, we can construct a
 	// reply! We'll take the Chat ID and Text from the incoming message
 	// and use it to create a new message.
