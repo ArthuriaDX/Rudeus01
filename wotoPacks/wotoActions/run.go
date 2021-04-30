@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 
@@ -27,7 +28,7 @@ func RunBot(_token string, c *gin.Context) {
 	// Create a new UpdateConfig struct with an offset of 0. Offsets are used
 	// to make sure Telegram knows we've handled previous values and we don't
 	// need them repeated.
-	updateConfig := tgbotapi.NewUpdate(0)
+	updateConfig := tgbotapi.NewUpdate(wotoValues.BaseIndex)
 
 	// Tell Telegram we should wait up to 30 seconds on each request for an
 	// update. This way we can get information just as quickly as making many
@@ -39,7 +40,24 @@ func RunBot(_token string, c *gin.Context) {
 
 	// Let's go through each update that we're getting from Telegram.
 	for update := range updates {
-		shouldHangle(&update)
+
+		// check if the current application is allowed to handle the update
+		// request or not.
+		if !shouldHangle(&update) {
+			continue
+		}
+
+		_type := getMessageType(&update)
+
+		switch _type {
+		case NONE:
+			continue
+		case TEXT_MESSAGE:
+			textMessage.HandleTextMessage(update.Message)
+		default:
+			continue
+		}
+
 		// Telegram can send many types of updates depending on what your Bot
 		// is up to. We only want to look at messages for now, so we can
 		// discard any other updates.

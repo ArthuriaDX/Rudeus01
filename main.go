@@ -33,6 +33,7 @@ func runApp(_settings *appSettings.AppSettings) {
 	router.GET(wotoValues.GET_SLASH, answerClient)
 
 	_ = router.Run(wotoValues.HTTP_ADDRESS + _settings.GetPort())
+	wotoActions.RunNew()
 }
 
 func answerClient(c *gin.Context) {
