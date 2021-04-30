@@ -66,7 +66,9 @@ func _checkTextMessage(_update *tgbotapi.Update) bool {
 	if _msg.Game != nil {
 		return false
 	}
-
+	if _msg.Audio != nil {
+		return false
+	}
 	return true
 }
 

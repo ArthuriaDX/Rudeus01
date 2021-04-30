@@ -27,6 +27,12 @@ func RunBot(_token string, c *gin.Context) {
 	}
 
 	bot.Debug = false
+	for {
+		_runOnce(bot, settings)
+	}
+}
+
+func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
 	// Create a new UpdateConfig struct with an offset of 0. Offsets are used
 	// to make sure Telegram knows we've handled previous values and we don't
 	// need them repeated.
@@ -38,7 +44,7 @@ func RunBot(_token string, c *gin.Context) {
 	updateConfig.Timeout = wotoValues.BaseTimeOut
 
 	// Start polling Telegram for updates.
-	updates := bot.GetUpdatesChan(updateConfig)
+	updates := _bot.GetUpdatesChan(updateConfig)
 
 	// Let's go through each update that we're getting from Telegram.
 	for update := range updates {
@@ -49,9 +55,8 @@ func RunBot(_token string, c *gin.Context) {
 			continue
 		}
 
-		HandleMessage(&update, settings)
+		HandleMessage(&update, _settings)
 	}
-
 }
 
 func RunNew() {
