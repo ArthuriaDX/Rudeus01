@@ -40,7 +40,7 @@ func AnswerClient(c *gin.Context) {
 	_token := c.Request.Header.Get("TOKEN_BOT")
 	if _token == "" {
 		c.String(http.StatusOK, "No token provided!")
-		log.Fatal("No token provided.")
+		//log.Fatal("No token provided.")
 	}
 	_count++
 	c.String(http.StatusOK, "%v %v; counter: %v", "yes! running with token:", _token, _count)

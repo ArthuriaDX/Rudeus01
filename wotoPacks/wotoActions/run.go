@@ -10,7 +10,8 @@ import (
 func RunBot(_token string, c *gin.Context) {
 	bot, err := tgbotapi.NewBotAPI(_token)
 	if err != nil {
-		panic(err)
+		c.String(http.StatusOK, "%v", err)
+		//panic(err)
 	}
 
 	bot.Debug = false
