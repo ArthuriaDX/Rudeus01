@@ -1,1 +1,2 @@
-# rudeus01
+# Rudeus01 Telegram Bot Project
+====================================

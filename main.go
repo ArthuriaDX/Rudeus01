@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package main
 
 import (
@@ -18,7 +23,7 @@ func main() {
 	if wotoSecurity.IsEmpty(&port) {
 		log.Fatal(wotoValues.PORT_ERROR)
 	}
-	_settings := appSettings.GetSettings(port)
+	_settings := appSettings.GetSettings(port, wotoActions.RunNew)
 	runApp(_settings)
 }
 
@@ -28,6 +33,7 @@ func runApp(_settings *appSettings.AppSettings) {
 	router.GET(wotoValues.GET_SLASH, answerClient)
 
 	_ = router.Run(wotoValues.HTTP_ADDRESS + _settings.GetPort())
+	wotoActions.RunNew()
 }
 
 func answerClient(c *gin.Context) {
