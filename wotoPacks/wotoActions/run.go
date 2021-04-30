@@ -56,7 +56,6 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
 		}
 
 		HandleMessage(&update, _settings)
-		RunNew()
 	}
 	RunNew()
 }
