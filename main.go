@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
 
+	"github.com/gin-gonic/gin"
 )
 
 var _count int
@@ -40,6 +40,6 @@ func AnswerClient(c *gin.Context) {
 	_token := c.Request.Header.Get("TOKEN_BOT")
 	_count++
 	c.String(http.StatusOK, "%v %v; counter: %v", "yes! running with token:", _token, _count)
-	wotoActions.RunBot(_token)
+	wotoActions.RunBot(_token, c)
 	c.String(http.StatusOK, "\n%v %v; counter: %v", "END! running with token:", _token, _count)
 }

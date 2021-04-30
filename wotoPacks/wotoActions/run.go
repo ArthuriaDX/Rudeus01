@@ -1,16 +1,19 @@
 package wotoActions
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_token string) {
+func RunBot(_token string, c *gin.Context) {
 	bot, err := tgbotapi.NewBotAPI(_token)
 	if err != nil {
 		panic(err)
 	}
 
-	bot.Debug = true
+	bot.Debug = false
 	// Create a new UpdateConfig struct with an offset of 0. Offsets are used
 	// to make sure Telegram knows we've handled previous values and we don't
 	// need them repeated.
@@ -48,7 +51,7 @@ func RunBot(_token string) {
 			// Note that panics are a bad way to handle errors. Telegram can
 			// have service outages or network errors, you should retry sending
 			// messages or more gracefully handle failures.
-			panic(err)
+			c.String(http.StatusOK, "ERROR: %v", err)
 		}
 	}
 
