@@ -1,4 +1,5 @@
 .env
 .docker_build/
 bin/
+/.idea
 *.woto.file.md

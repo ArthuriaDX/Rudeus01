@@ -1,6 +1,7 @@
 package wotoActions
 
 import (
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,9 +11,8 @@ import (
 func RunBot(_token string, c *gin.Context) {
 	bot, err := tgbotapi.NewBotAPI(_token)
 	if err != nil {
-		c.String(http.StatusOK, "%v", err)
+		c.String(http.StatusOK, err.Error())
 		return
-		//panic(err)
 	}
 
 	bot.Debug = false
@@ -24,7 +24,7 @@ func RunBot(_token string, c *gin.Context) {
 	// Tell Telegram we should wait up to 30 seconds on each request for an
 	// update. This way we can get information just as quickly as making many
 	// frequent requests without having to send nearly as many.
-	updateConfig.Timeout = 30
+	updateConfig.Timeout = wotoValues.BaseTimeOut
 
 	// Start polling Telegram for updates.
 	updates := bot.GetUpdatesChan(updateConfig)
@@ -53,7 +53,7 @@ func RunBot(_token string, c *gin.Context) {
 			// Note that panics are a bad way to handle errors. Telegram can
 			// have service outages or network errors, you should retry sending
 			// messages or more gracefully handle failures.
-			c.String(http.StatusOK, "ERROR: %v", err)
+
 		}
 	}
 
