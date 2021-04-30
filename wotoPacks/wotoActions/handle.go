@@ -17,8 +17,8 @@ import (
 // shouldHangle will check if you should handle the
 // update or not.
 func shouldHangle(_update *tgbotapi.Update) bool {
-	_strIndex := os.Getenv(wotoValues.APP_PORT)
-	_strTotal := os.Getenv("")
+	_strIndex := os.Getenv(wotoValues.INDEX_KEY)
+	_strTotal := os.Getenv(wotoValues.TOTAL_INDEX_KEY)
 	// get the index of this bot.
 	// if the index is 1, then the bot will answer any
 	// incoming update request
