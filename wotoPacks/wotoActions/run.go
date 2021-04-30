@@ -1,12 +1,11 @@
 package wotoActions
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot() {
-	bot, err := tgbotapi.NewBotAPI(wotoValues.APITOKEN)
+func RunBot(_token string) {
+	bot, err := tgbotapi.NewBotAPI(_token)
 	if err != nil {
 		panic(err)
 	}

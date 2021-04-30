@@ -27,7 +27,7 @@ func main() {
 
 	router.GET("/", AnswerClient)
 
-	router.Run(":" + port)
+	_ = router.Run(":" + port)
 }
 
 func AnswerClient(c *gin.Context) {
@@ -37,8 +37,9 @@ func AnswerClient(c *gin.Context) {
 	} else {
 		return
 	}
-	_s := c.Request.Header.Get("test")
+	_token := c.Request.Header.Get("TOKEN_BOT")
 	_count++
-	c.String(http.StatusOK, "%v %v; countr: %v", "yes!", _s, _count)
-	wotoActions.RunBot()
+	c.String(http.StatusOK, "%v %v; counter: %v", "yes! running with token:", _token, _count)
+	wotoActions.RunBot(_token)
+	c.String(http.StatusOK, "\n%v %v; counter: %v", "END! running with token:", _token, _count)
 }
