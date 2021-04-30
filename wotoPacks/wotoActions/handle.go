@@ -41,7 +41,7 @@ func shouldHangle(_update *tgbotapi.Update) bool {
 func HandleMessage(update *tgbotapi.Update, _settings *appSettings.AppSettings) {
 	switch getMessageType(update) {
 	case NONE:
-		log.Println(NONE)
+		log.Println(*update)
 	case TEXT_MESSAGE:
 		textMessage.HandleTextMessage(update.Message, _settings)
 	default:

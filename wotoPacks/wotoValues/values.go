@@ -9,7 +9,7 @@ package wotoValues
 const (
 	BaseIndex    = 0
 	BaseOneIndex = 1
-	BaseTimeOut  = 30
+	BaseTimeOut  = 10
 )
 
 const (
