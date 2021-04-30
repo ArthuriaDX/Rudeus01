@@ -1,2 +1,3 @@
 package wotoValues
 
+const APITOKEN = ""
