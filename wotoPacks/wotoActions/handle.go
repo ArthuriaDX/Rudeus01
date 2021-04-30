@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -36,6 +38,13 @@ func shouldHangle(_update *tgbotapi.Update) bool {
 	return _i == _index
 }
 
-func HandleMessage(_message *tgbotapi.Message) {
+func HandleMessage(update *tgbotapi.Update, _settings *appSettings.AppSettings) {
+	switch getMessageType(update) {
+	case NONE:
+		log.Println(NONE)
+	case TEXT_MESSAGE:
+		textMessage.HandleTextMessage(update.Message, _settings)
+	default:
 
+	}
 }

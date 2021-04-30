@@ -23,7 +23,7 @@ func main() {
 	if wotoSecurity.IsEmpty(&port) {
 		log.Fatal(wotoValues.PORT_ERROR)
 	}
-	_settings := appSettings.GetSettings(port)
+	_settings := appSettings.GetSettings(port, wotoActions.RunNew)
 	runApp(_settings)
 }
 
