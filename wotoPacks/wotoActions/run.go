@@ -62,8 +62,11 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
 }
 
 func RunNew() {
-	url := os.Getenv(wotoValues.RUDEUS_URL_KEY)
-	if !wotoSecurity.IsEmpty(&url) {
-		_, _ = http.Get(url)
-	}
+	appSettings.App_exit()
+	go func() {
+		url := os.Getenv(wotoValues.RUDEUS_URL_KEY)
+		if !wotoSecurity.IsEmpty(&url) {
+			_, _ = http.Get(url)
+		}
+	}()
 }
