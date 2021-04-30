@@ -38,6 +38,10 @@ func AnswerClient(c *gin.Context) {
 		return
 	}
 	_token := c.Request.Header.Get("TOKEN_BOT")
+	if _token == nil {
+		c.String(http.StatusOK, "No token provided!")
+		log.Fatal("No token provided.")
+	}
 	_count++
 	c.String(http.StatusOK, "%v %v; counter: %v", "yes! running with token:", _token, _count)
 	wotoActions.RunBot(_token, c)
