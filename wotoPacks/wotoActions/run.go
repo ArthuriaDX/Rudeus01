@@ -52,16 +52,22 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
 		// check if the current application is allowed to handle the update
 		// request or not.
 		if !shouldHangle(&update) {
+			_runRaw()
 			continue
 		}
-
+		_runRaw()
 		HandleMessage(&update, _settings)
+		_runRaw()
 	}
 	RunNew()
 }
 
 func RunNew() {
 	appSettings.App_exit()
+	_runRaw()
+}
+
+func _runRaw() {
 	go func() {
 		url := os.Getenv(wotoValues.RUDEUS_URL_KEY)
 		if !wotoSecurity.IsEmpty(&url) {
