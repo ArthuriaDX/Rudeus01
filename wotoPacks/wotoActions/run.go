@@ -1,8 +1,15 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoActions
 
 import (
 	"net/http"
+	"os"
 
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 
 	"github.com/gin-gonic/gin"
@@ -32,13 +39,14 @@ func RunBot(_token string, c *gin.Context) {
 
 	// Let's go through each update that we're getting from Telegram.
 	for update := range updates {
+		shouldHangle(&update)
 		// Telegram can send many types of updates depending on what your Bot
 		// is up to. We only want to look at messages for now, so we can
 		// discard any other updates.
 		if update.Message == nil {
+
 			continue
 		}
-
 		// Now that we know we've gotten a new message, we can construct a
 		// reply! We'll take the Chat ID and Text from the incoming message
 		// and use it to create a new message.
@@ -62,5 +70,8 @@ func RunBot(_token string, c *gin.Context) {
 }
 
 func RunNew() {
-	_, _ = http.Get(wotoValues.RUDEUS_URL)
+	url := os.Getenv(wotoValues.RUDEUS_URL_KEY)
+	if !wotoSecurity.IsEmpty(&url) {
+		_, _ = http.Get(url)
+	}
 }

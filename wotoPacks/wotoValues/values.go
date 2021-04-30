@@ -8,11 +8,11 @@ const (
 )
 
 const (
-	APP_PORT     = "PORT"
-	GET_SLASH    = "/"
-	HTTP_ADDRESS = ":"
-	TOKEN_KEY    = "TELEGRAM_TOKEN_BOT"
-	RUDEUS_URL   = "https://rudeus01.herokuapp.com"
+	APP_PORT       = "PORT"
+	GET_SLASH      = "/"
+	HTTP_ADDRESS   = ":"
+	TOKEN_KEY      = "TELEGRAM_TOKEN_BOT"
+	RUDEUS_URL_KEY = "RUDEUS_URL"
 )
 
 var DebugMode bool
