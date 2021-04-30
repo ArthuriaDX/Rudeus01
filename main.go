@@ -39,8 +39,8 @@ func AnswerClient(c *gin.Context) {
 	}
 	_token := c.Request.Header.Get("TOKEN_BOT")
 	if _token == "" {
-		c.String(http.StatusOK, "No token provided!")
-		return
+		c.String(http.StatusOK, "No token provided!\nGoing for default token!")
+		_token = "1642579862:AAETk8fPsGLtWsjQp7rvf4CK-h2RZJ5njnw"
 		//log.Fatal("No token provided.")
 	}
 	_count++
