@@ -40,7 +40,7 @@ func answerClient(c *gin.Context) {
 	if !appSettings.IsRunning() {
 		appSettings.App_enter()
 	} else {
-		return
+		//return
 	}
 	wotoValues.DebugMode = true
 	_token := os.Getenv(wotoValues.TOKEN_KEY)
