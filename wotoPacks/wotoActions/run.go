@@ -1,8 +1,9 @@
 package wotoActions
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"net/http"
+
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -53,8 +54,13 @@ func RunBot(_token string, c *gin.Context) {
 			// Note that panics are a bad way to handle errors. Telegram can
 			// have service outages or network errors, you should retry sending
 			// messages or more gracefully handle failures.
-
+			RunNew()
+			return
 		}
 	}
 
+}
+
+func RunNew() {
+	_, _ = http.Get(wotoValues.RUDEUS_URL)
 }

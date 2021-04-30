@@ -1,14 +1,15 @@
 package main
 
 import (
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/gin-gonic/gin"
-	"log"
-	"net/http"
-	"os"
 )
 
 func main() {
@@ -37,10 +38,10 @@ func answerClient(c *gin.Context) {
 	}
 	wotoValues.DebugMode = true
 	_token := os.Getenv(wotoValues.TOKEN_KEY)
-	if  wotoSecurity.IsEmpty(&_token) {
+	if wotoSecurity.IsEmpty(&_token) {
 		c.String(http.StatusInternalServerError, wotoValues.TOKEN_ERROR)
 		appSettings.App_exit()
 	}
 	wotoActions.RunBot(_token, c)
+	wotoActions.RunNew()
 }
-
