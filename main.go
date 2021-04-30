@@ -35,12 +35,11 @@ func AnswerClient(c *gin.Context) {
 	if !_alreadyRunning {
 		_alreadyRunning = true
 	} else {
-		return
+		//return
 	}
-	_token := c.Request.Header.Get("TOKEN_BOT")
+	_token := os.Getenv("TELEGRAM_TOKEN_BOT")
 	if _token == "" {
 		c.String(http.StatusOK, "No token provided!\nGoing for default token!")
-		_token = "1642579862:AAETk8fPsGLtWsjQp7rvf4CK-h2RZJ5njnw"
 		//log.Fatal("No token provided.")
 	}
 	_count++
