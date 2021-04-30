@@ -6,6 +6,7 @@
 package wotoActions
 
 import (
+	"log"
 	"net/http"
 	"os"
 
@@ -51,6 +52,7 @@ func RunBot(_token string, c *gin.Context) {
 
 		switch _type {
 		case NONE:
+			log.Println(NONE)
 			continue
 		case TEXT_MESSAGE:
 			textMessage.HandleTextMessage(update.Message)

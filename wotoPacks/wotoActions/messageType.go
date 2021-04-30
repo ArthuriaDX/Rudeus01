@@ -26,7 +26,7 @@ func getMessageType(_update *tgbotapi.Update) MessageType {
 
 func _checkTextMessage(_update *tgbotapi.Update) bool {
 
-	return false
+	return true
 }
 
 func _checkGifMessage(_update *tgbotapi.Update) bool {
