@@ -6,29 +6,25 @@
 package wotoActions
 
 import (
-	"net/http"
-	"os"
+	"log"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 
-	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_token string, c *gin.Context) {
-	settings := appSettings.GetExisting()
-	bot, err := tgbotapi.NewBotAPI(_token)
-	settings.SetAPI(bot)
+func RunBot(_settings *appSettings.AppSettings) {
+	bot, err := tgbotapi.NewBotAPI(_settings.GetObt())
+	_settings.SetAPI(bot)
 	if err != nil {
-		c.String(http.StatusOK, err.Error())
+		log.Fatal(err)
 		return
 	}
 
 	bot.Debug = false
 	for {
-		_runOnce(bot, settings)
+		_runOnce(bot, _settings)
 	}
 }
 
@@ -48,30 +44,30 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
 
 	// Let's go through each update that we're getting from Telegram.
 	for update := range updates {
-
 		// check if the current application is allowed to handle the update
 		// request or not.
 		if !shouldHangle(&update) {
-			_runRaw()
 			continue
 		}
-		_runRaw()
 		HandleMessage(&update, _settings)
-		_runRaw()
 	}
-	RunNew()
 }
 
-func RunNew() {
-	appSettings.App_exit()
-	_runRaw()
-}
+// SendSudo, will send a message to the superuser of the bot.
+func SendSudo(str string, _settings *appSettings.AppSettings) {
+	// Now that we know we've gotten a new message, we can construct a
+	// reply! We'll take the Chat ID and Text from the incoming message
+	// and use it to create a new message. 1341091260
+	msg := tgbotapi.NewMessage(1341091260, str)
 
-func _runRaw() {
-	go func() {
-		url := os.Getenv(wotoValues.RUDEUS_URL_KEY)
-		if !wotoSecurity.IsEmpty(&url) {
-			_, _ = http.Get(url)
-		}
-	}()
+	// We'll also say that this message is a reply to the previous message.
+	// For any other specifications than Chat ID or Text, you'll need to
+	// set fields on the `MessageConfig`.
+	if _, err := _settings.GetAPI().Send(msg); err != nil {
+		// Note that panics are a bad way to handle errors. Telegram can
+		// have service outages or network errors, you should retry sending
+		// messages or more gracefully handle failures.
+		log.Println(err)
+		return
+	}
 }

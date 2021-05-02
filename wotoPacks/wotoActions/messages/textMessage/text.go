@@ -6,6 +6,8 @@
 package textMessage
 
 import (
+	"log"
+
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -18,10 +20,10 @@ func HandleTextMessage(_message *tgbotapi.Message, _settings *appSettings.AppSet
 		"I've got a new `Message!` this one: \n" +
 		_message.Text + "\n" +
 		"from : @" +
-		_message.From.UserName + "ArthuriaDX! Last Update!"
+		_message.From.UserName
 	// Now that we know we've gotten a new message, we can construct a
 	// reply! We'll take the Chat ID and Text from the incoming message
-	// and use it to create a new message.
+	// and use it to create a new message. 1341091260
 	msg := tgbotapi.NewMessage(_message.Chat.ID, _str)
 
 	// We'll also say that this message is a reply to the previous message.
@@ -32,7 +34,7 @@ func HandleTextMessage(_message *tgbotapi.Message, _settings *appSettings.AppSet
 		// Note that panics are a bad way to handle errors. Telegram can
 		// have service outages or network errors, you should retry sending
 		// messages or more gracefully handle failures.
-		_settings.RunNew()
+		log.Println(err)
 		return
 	}
 }

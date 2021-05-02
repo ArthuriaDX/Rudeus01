@@ -15,21 +15,20 @@ var _alreadyRunning bool
 var _settings *AppSettings
 
 type AppSettings struct {
-	port   string
-	router *gin.Engine
-	botAPI *tgbotapi.BotAPI
-	RunNew func()
+	botAPI     *tgbotapi.BotAPI
+	router     *gin.Engine
+	isGlobal   bool
+	tObt       string
+	port       string
+	_apiObtain func(*AppSettings) bool
 }
 
-func GetSettings(_port string, _runNew func()) *AppSettings {
+func GetSettings(_port string) *AppSettings {
 	if _settings != nil {
 		return GetExisting()
 	}
-	if wotoSecurity.IsEmpty(&_port) {
-		return nil
-	}
 	settings := AppSettings{}
-	settings._setPort(_port)
+	settings._setPort(&_port)
 	settings._setRouter()
 	_settings = &settings
 	return _settings
@@ -39,16 +38,44 @@ func GetExisting() *AppSettings {
 	return _settings
 }
 
+func (_s *AppSettings) InvalidateAPI() bool {
+	if _s._apiObtain != nil {
+		_s.isGlobal = !wotoSecurity.IsEmpty(&_s.tObt)
+	} else {
+		_s.isGlobal = false
+	}
+	return _s.isGlobal && _s._apiObtain(_s)
+}
+
 func (_s *AppSettings) SetAPI(_api *tgbotapi.BotAPI) {
 	_s.botAPI = _api
 }
 
-func (_s *AppSettings) _setPort(_port string) {
-	_s.port = _port
+func (_s *AppSettings) SetObt(_obt func(*AppSettings) bool) {
+	_s._apiObtain = _obt
 }
 
+func (_s *AppSettings) SetTObt(_obt string) {
+	_s.tObt = _obt
+}
+
+func (_s *AppSettings) _setPort(_port *string) {
+	_s.port = *_port
+}
 func (_s *AppSettings) _setRouter() {
 	_s.router = gin.New()
+}
+
+func (_s *AppSettings) GetAPI() *tgbotapi.BotAPI {
+	return _s.botAPI
+}
+
+func (_s *AppSettings) IsGlobal() bool {
+	return _s.isGlobal
+}
+
+func (_s *AppSettings) GetObt() string {
+	return _s.tObt
 }
 
 func (_s *AppSettings) GetPort() string {
@@ -58,11 +85,6 @@ func (_s *AppSettings) GetPort() string {
 func (_s *AppSettings) GetRouter() *gin.Engine {
 	return _s.router
 }
-
-func (_s *AppSettings) GetAPI() *tgbotapi.BotAPI {
-	return _s.botAPI
-}
-
 func App_enter() {
 	_alreadyRunning = true
 }

@@ -7,7 +7,6 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
@@ -19,12 +18,11 @@ import (
 
 func main() {
 	port := os.Getenv(wotoValues.APP_PORT)
-
 	if wotoSecurity.IsEmpty(&port) {
 		log.Fatal(wotoValues.PORT_ERROR)
 	}
-	_settings := appSettings.GetSettings(port, wotoActions.RunNew)
-	runApp(_settings)
+	settings := appSettings.GetSettings(port)
+	runApp(settings)
 }
 
 func runApp(_settings *appSettings.AppSettings) {
@@ -33,21 +31,27 @@ func runApp(_settings *appSettings.AppSettings) {
 	router.GET(wotoValues.GET_SLASH, answerClient)
 
 	_ = router.Run(wotoValues.HTTP_ADDRESS + _settings.GetPort())
-	wotoActions.RunNew()
 }
 
 func answerClient(c *gin.Context) {
 	if !appSettings.IsRunning() {
 		appSettings.App_enter()
 	} else {
+		c.String(200, "%v", wotoValues.ALREADY_RUNNING)
 		return
 	}
 	wotoValues.DebugMode = true
+	_settings := appSettings.GetExisting()
 	_token := os.Getenv(wotoValues.TOKEN_KEY)
 	if wotoSecurity.IsEmpty(&_token) {
-		c.String(http.StatusInternalServerError, wotoValues.TOKEN_ERROR)
-		appSettings.App_exit()
+		log.Fatal(wotoValues.INVALID_API)
 	}
-	wotoActions.RunBot(_token, c)
-	wotoActions.RunNew()
+	_settings.SetTObt(_token)
+	_settings.SetObt(wotoActions.WObtainTC)
+	if !_settings.InvalidateAPI() {
+		c.String(200, "%v", wotoValues.INVALID_ENGINE)
+		log.Println(wotoValues.INVALID_ENGINE)
+		os.Exit(0)
+	}
+	wotoActions.RunBot(_settings)
 }
