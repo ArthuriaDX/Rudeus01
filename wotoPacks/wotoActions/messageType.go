@@ -33,6 +33,9 @@ func getMessageType(_update *tgbotapi.Update) MessageType {
 
 func _checkTextMessage(_update *tgbotapi.Update) bool {
 	_msg := _update.Message
+	if _msg == nil {
+		return false
+	}
 	if _msg.MessageID == wotoValues.BaseIndex {
 		return false
 	}

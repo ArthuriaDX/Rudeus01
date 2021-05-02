@@ -6,6 +6,7 @@
 package wotoActions
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
@@ -23,10 +24,11 @@ func HandleMessage(update *tgbotapi.Update, _settings *appSettings.AppSettings) 
 	switch getMessageType(update) {
 	case NONE:
 		log.Println(*update)
-		SendSudo("in NONE! "+update.Message.Text, _settings)
+		msg := fmt.Sprint(update)
+		SendSudo("in NONE! "+msg, _settings)
 	case TEXT_MESSAGE:
 		//log.Println("in TEXT switch! "+update.Message.Text, _settings)
-		textMessage.HandleTextMessage(update.Message, _settings)
+		textMessage.HandleTextMessage(update.Message)
 	default:
 	}
 }

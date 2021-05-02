@@ -7,6 +7,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
@@ -29,7 +30,6 @@ func runApp(_settings *appSettings.AppSettings) {
 	router := _settings.GetRouter()
 	router.Use(gin.Logger())
 	router.GET(wotoValues.GET_SLASH, answerClient)
-
 	_ = router.Run(wotoValues.HTTP_ADDRESS + _settings.GetPort())
 }
 
@@ -37,7 +37,7 @@ func answerClient(c *gin.Context) {
 	if !appSettings.IsRunning() {
 		appSettings.App_enter()
 	} else {
-		c.String(200, "%v", wotoValues.ALREADY_RUNNING)
+		c.String(http.StatusAccepted, "%v", wotoValues.ALREADY_RUNNING)
 		return
 	}
 	wotoValues.DebugMode = true
@@ -49,9 +49,13 @@ func answerClient(c *gin.Context) {
 	_settings.SetTObt(_token)
 	_settings.SetObt(wotoActions.WObtainTC)
 	if !_settings.InvalidateAPI() {
-		c.String(200, "%v", wotoValues.INVALID_ENGINE)
+		c.String(http.StatusForbidden, "%v", wotoValues.INVALID_ENGINE)
 		log.Println(wotoValues.INVALID_ENGINE)
-		os.Exit(0)
+		os.Exit(wotoValues.BaseIndex)
 	}
-	wotoActions.RunBot(_settings)
+	result, client := wotoActions.GenerateClient()
+	if result != wotoActions.SUCCESS {
+		log.Fatal(wotoValues.WOTO_CLIENT_ERROR)
+	}
+	wotoActions.RunBot(_settings, client)
 }

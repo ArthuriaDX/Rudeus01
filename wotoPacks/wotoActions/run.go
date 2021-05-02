@@ -14,7 +14,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_settings *appSettings.AppSettings) {
+func RunBot(_settings *appSettings.AppSettings, _client *WotoClient) {
 	bot, err := tgbotapi.NewBotAPI(_settings.GetObt())
 	_settings.SetAPI(bot)
 	if err != nil {
@@ -23,6 +23,8 @@ func RunBot(_settings *appSettings.AppSettings) {
 	}
 
 	bot.Debug = false
+	_client.PingClientDB(true)
+
 	for {
 		_runOnce(bot, _settings)
 	}
@@ -49,7 +51,7 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
 		if !shouldHangle(&update) {
 			continue
 		}
-		HandleMessage(&update, _settings)
+		go HandleMessage(&update, _settings)
 	}
 }
 
