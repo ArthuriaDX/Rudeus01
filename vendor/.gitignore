@@ -1,0 +1,7 @@
+# ignore file
+*.md
+*.go.in
+/github.com
+/golang.org
+/gopkg.in
+

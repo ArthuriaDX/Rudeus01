@@ -19,6 +19,7 @@ func HandleTextMessage(message *tgbotapi.Message) {
 	if botCommands.IsSudoCommand(&message.Text) {
 		botCommands.HandleSudoCommand(message)
 	} else if botCommands.IsCommand(&message.Text) {
+		log.Println("Is HERE!")
 		botCommands.HandleCommand(message)
 	} else {
 		log.Println("In ELSeE!")

@@ -1,6 +1,12 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package botCommands
 
 import (
+	"log"
 	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
@@ -24,8 +30,18 @@ func isCommand2(_text *string) bool {
 	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFEX2)
 }
 
-func HandleCommand(_message *tgbotapi.Message) {
-
+func HandleCommand(message *tgbotapi.Message) {
+	cmdListInit()
+	text := strings.ToLower(message.Text)
+	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFEX1)
+	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFEX2)
+	texts := strings.Split(text, wotoValues.SPACE_VALUE)
+	//log.Println("before event : ", texts)
+	log.Println(texts[wotoValues.BaseIndex])
+	event := cmdList[texts[wotoValues.BaseIndex]]
+	if event != nil {
+		event(message, texts)
+	}
 }
 
 //func main() {

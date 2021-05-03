@@ -6,9 +6,6 @@
 package wotoActions
 
 import (
-	"fmt"
-	"log"
-
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -23,12 +20,11 @@ func shouldHangle(_update *tgbotapi.Update) bool {
 func HandleMessage(update *tgbotapi.Update, _settings *appSettings.AppSettings) {
 	switch getMessageType(update) {
 	case NONE:
-		log.Println(*update)
-		msg := fmt.Sprint(update)
-		SendSudo("in NONE! "+msg, _settings)
+		return
 	case TEXT_MESSAGE:
 		//log.Println("in TEXT switch! "+update.Message.Text, _settings)
 		textMessage.HandleTextMessage(update.Message)
 	default:
+		return
 	}
 }

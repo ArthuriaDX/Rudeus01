@@ -12,15 +12,16 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoChilds"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	port := os.Getenv(wotoValues.APP_PORT)
+	port := os.Getenv(wv.APP_PORT)
 	if wotoSecurity.IsEmpty(&port) {
-		log.Fatal(wotoValues.PORT_ERROR)
+		log.Fatal(wv.PORT_ERROR)
 	}
 	settings := appSettings.GetSettings(port)
 	runApp(settings)
@@ -29,33 +30,36 @@ func main() {
 func runApp(_settings *appSettings.AppSettings) {
 	router := _settings.GetRouter()
 	router.Use(gin.Logger())
-	router.GET(wotoValues.GET_SLASH, answerClient)
-	_ = router.Run(wotoValues.HTTP_ADDRESS + _settings.GetPort())
+	router.GET(wv.GET_SLASH, answerClient)
+	_ = router.Run(wv.HTTP_ADDRESS + _settings.GetPort())
 }
 
 func answerClient(c *gin.Context) {
 	if !appSettings.IsRunning() {
 		appSettings.App_enter()
 	} else {
-		c.String(http.StatusAccepted, "%v", wotoValues.ALREADY_RUNNING)
+		_s := appSettings.GetExisting()
+		_s.RunNext()
+		c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.ALREADY_RUNNING)
 		return
 	}
-	wotoValues.DebugMode = true
+	wv.DebugMode = true
 	_settings := appSettings.GetExisting()
-	_token := os.Getenv(wotoValues.TOKEN_KEY)
+	_token := os.Getenv(wv.TOKEN_KEY)
 	if wotoSecurity.IsEmpty(&_token) {
-		log.Fatal(wotoValues.INVALID_API)
+		log.Fatal(wv.INVALID_API)
 	}
 	_settings.SetTObt(_token)
-	_settings.SetObt(wotoActions.WObtainTC)
+	_settings.SetObt(wotoChilds.WObtainTC)
+	_settings.SetNextChild(wotoChilds.RunNextChild)
 	if !_settings.InvalidateAPI() {
-		c.String(http.StatusForbidden, "%v", wotoValues.INVALID_ENGINE)
-		log.Println(wotoValues.INVALID_ENGINE)
-		os.Exit(wotoValues.BaseIndex)
+		c.String(http.StatusForbidden, wv.FORMAT_VALUE, wv.INVALID_ENGINE)
+		log.Println(wv.INVALID_ENGINE)
+		os.Exit(wv.BaseIndex)
 	}
 	result, client := wotoActions.GenerateClient()
 	if result != wotoActions.SUCCESS {
-		log.Fatal(wotoValues.WOTO_CLIENT_ERROR)
+		log.Fatal(wv.WOTO_CLIENT_ERROR)
 	}
 	wotoActions.RunBot(_settings, client)
 }

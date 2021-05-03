@@ -1,9 +1,10 @@
 package wotoSecurity
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"strconv"
 	"strings"
+
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
 const (
@@ -15,17 +16,17 @@ const (
 )
 
 const (
-	MaxUIDIndex = 9
-	BaseUIDIndex = 1
+	MaxUIDIndex    = 9
+	BaseUIDIndex   = 1
 	UIDIndexOffSet = 1
 )
 
 const (
 	// the StrongBase is Hexadecimal, which is base 16.
-	StrongBase 		= 0x010
+	StrongBase = 0x010
 	// the StrongOffSet is the offset value of each character in the
 	// strong string.
-	StrongOffSet 	= 0x00D
+	StrongOffSet = 0x00D
 )
 
 // the StrongString used in the program for High-security!
@@ -36,7 +37,7 @@ type StrongString struct {
 // IsEmpty function will check if the passed-by
 // string value is empty or not.
 func IsEmpty(_s *string) bool {
-	return *_s == EMPTY
+	return _s == nil || *_s == EMPTY
 }
 
 // generateStrongString will generate a new StrongString
@@ -57,13 +58,12 @@ func GetStrong(_s string) StrongString {
 	return _strong
 }
 
-
 // convert the specified string array (encoded) to byte array.
-func _toByteArray(myStrings []string) []rune{
+func _toByteArray(myStrings []string) []rune {
 	myBytes := make([]rune, 0)
 	for _, _current := range myStrings {
 		_myInt, _ := strconv.Atoi(_current)
-		myBytes = append(myBytes, rune(_myInt + StrongOffSet))
+		myBytes = append(myBytes, rune(_myInt+StrongOffSet))
 	}
 	return myBytes
 }
@@ -97,7 +97,7 @@ func Split(_s string, separator ...string) []string {
 		return nil
 	}
 	_firstSet := false
-	var(
+	var (
 		_shallow   string
 		_myStrings []string
 	)
@@ -110,8 +110,8 @@ func Split(_s string, separator ...string) []string {
 				continue
 			}
 			_shallow = strings.Join(_myStrings, EMPTY)
-			_myStrings	= strings.Split(_shallow, _current)
-			_myStrings	= FixSplit(_myStrings)
+			_myStrings = strings.Split(_shallow, _current)
+			_myStrings = FixSplit(_myStrings)
 		}
 	}
 	if !_firstSet {
@@ -123,7 +123,7 @@ func Split(_s string, separator ...string) []string {
 
 // FixSplit will fix the bullshit bug in the
 // Split function (which is not ignoring the spaces between strings).
-func FixSplit(_myStrings []string) []string{
+func FixSplit(_myStrings []string) []string {
 	final := make([]string, 0, cap(_myStrings))
 	for _, _current := range _myStrings {
 		if !IsEmpty(&_current) {
@@ -135,10 +135,10 @@ func FixSplit(_myStrings []string) []string{
 
 // _getString will give you an encoded string with the High-security
 // level which you should use it in the database.
-func (_s *StrongString) _getString() string {
+func (_s *StrongString) GetString() string {
 	var _current int
 	var total = EMPTY
-	for _, b := range _s._value{
+	for _, b := range _s._value {
 		_current = int(b)
 		total += strconv.Itoa(_current)
 		total += LineSeparator

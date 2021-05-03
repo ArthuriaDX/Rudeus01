@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoValues
 
 const (
@@ -10,4 +15,5 @@ const (
 	CLIENT_SETTINGS_NIL = "Tried to set client settings, but it was nil!!"
 	HOST_ADDRESS_NOTSET = "Couldn't find main host address in the environment!"
 	DATABASE1_NOTSET    = "Couldn't find DATABASE1 address in the environment!"
+	RUDEUS_URL_NOTSET   = "Couldn't find Rudeus URL value in the environment!"
 )
