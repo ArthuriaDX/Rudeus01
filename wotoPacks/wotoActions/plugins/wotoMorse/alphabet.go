@@ -5,6 +5,12 @@
 
 package wotoMorse
 
+import (
+	"strings"
+
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+)
+
 // _alphabet is a mapping of Alpha numeric characters to Morse code
 var _alphabet map[string]string
 
@@ -19,70 +25,7 @@ func morseInit() {
 	}
 }
 func init_alphabet() {
-	_alphabet = map[string]string{
-		"A":  ".-",
-		"B":  "-...",
-		"C":  "-.-.",
-		"D":  "-..",
-		"E":  ".",
-		"F":  "..-.",
-		"G":  "--.",
-		"H":  "....",
-		"I":  "..",
-		"J":  ".---",
-		"K":  "-.-",
-		"L":  ".-..",
-		"M":  "--",
-		"N":  "-.",
-		"O":  "---",
-		"P":  ".--.",
-		"Q":  "--.-",
-		"R":  ".-.",
-		"S":  "...",
-		"T":  "-",
-		"U":  "..-",
-		"V":  "...-",
-		"W":  ".--",
-		"X":  "-..-",
-		"Y":  "-.--",
-		"Z":  "--..",
-		"1":  ".----",
-		"2":  "..---",
-		"3":  "...--",
-		"4":  "....-",
-		"5":  ".....",
-		"6":  "-....",
-		"7":  "--...",
-		"8":  "---..",
-		"9":  "----.",
-		"0":  "-----",
-		" ":  "/",
-		".":  ".-.-.-",  // period
-		":":  "---...",  // colon
-		",":  "--..--",  // comma
-		";":  "-.-.-",   // semicolon
-		"?":  "..--..",  // question
-		"=":  "-...-",   // equals
-		"'":  ".----.",  // apostrophe
-		"/":  "-..-.",   // slash
-		"!":  "-.-.--",  // exclamation
-		"-":  "-....-",  // dash
-		"_":  "..--.-",  // underline
-		"\"": ".-..-.",  // quotation marks
-		"(":  "-.--.",   // parenthesis (open)
-		")":  "-.--.-",  // parenthesis (close)
-		"()": "-.--.-",  // parentheses
-		"$":  "...-..-", // dollar
-		"&":  ".-...",   // ampersand
-		"@":  ".--.-.",  // at
-		"+":  ".-.-.",   // plus
-		"Á":  ".--.-",   // A with acute accent
-		"Ä":  ".-.-",    // A with diaeresis
-		"É":  "..-..",   // E with acute accent
-		"Ñ":  "--.--",   // N with tilde
-		"Ö":  "---.",    // O with diaeresis
-		"Ü":  "..--",    // U with diaeresis
-	}
+	setMap()
 }
 
 func init_reverse() {
@@ -95,4 +38,20 @@ func init_reverse() {
 	for k, v := range _alphabet {
 		_reverseAlphabet[v] = k
 	}
+}
+
+// ToBinary will convert a morse string to binary string.
+// for example it will convert ".-.-" to "0101"
+func ToBinary(value string) string {
+	str := strings.ReplaceAll(value, wv.BaseIndexStr, wv.DotStr)
+	str = strings.ReplaceAll(str, wv.BaseOneIndexStr, wv.LineStr)
+	return str
+}
+
+// ToMorse will convert a binary string to morse string.
+// for example it will convert "0101" to ".-.-"
+func ToMorse(value string) string {
+	str := strings.ReplaceAll(value, wv.DotStr, wv.BaseIndexStr)
+	str = strings.ReplaceAll(str, wv.LineStr, wv.BaseOneIndexStr)
+	return str
 }

@@ -9,12 +9,13 @@ import (
 	"log"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_settings *appSettings.AppSettings, _client *WotoClient) {
+func RunBot(_settings *appSettings.AppSettings, _client *wotoDB.WotoClient) {
 	bot, err := tgbotapi.NewBotAPI(_settings.GetObt())
 	_settings.SetAPI(bot)
 	if err != nil {

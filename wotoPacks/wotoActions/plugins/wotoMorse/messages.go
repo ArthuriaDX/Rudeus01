@@ -3,12 +3,11 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of the source code.
 
-package wotoValues
+package wotoMorse
 
-// the prefex values for commands.
+// the messages for wotoMorse plugin.
 const (
-	COMMAND_PREFEX1 = "!"
-	COMMAND_PREFEX2 = "/"
-	SUDO_PREFEX1    = ">"
-	FLAG_PREFEX     = "--"
+	TO_BINARY_M  = "Converted to Binary:\n"
+	TO_MORSE_M   = "Converted to Morse:\n"
+	FROM_MORSE_M = "Converted from Morse:\n"
 )

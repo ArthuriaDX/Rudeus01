@@ -1,4 +1,4 @@
-package wotoActions
+package common
 
 // the result of a calling function
 type RESULT uint8

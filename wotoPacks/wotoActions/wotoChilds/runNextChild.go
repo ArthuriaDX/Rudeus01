@@ -11,12 +11,11 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
 const (
-	_ZERO_PREFEX = "0"
-	_LENGTH      = 2
+	_LENGTH = 2
 )
 
 // RunNextChild will run the next child. please consider that the url
@@ -28,17 +27,17 @@ func RunNextChild(url string, settings *appSettings.AppSettings) {
 	var next int
 	index := settings.GetIndex()
 	total := settings.GetTotalIndex()
-	differ := total - wotoValues.BaseOneIndex
+	differ := total - wv.BaseOneIndex
 	if index == differ {
-		next = wotoValues.BaseIndex
+		next = wv.BaseIndex
 	} else {
-		next = index + wotoValues.BaseOneIndex
+		next = index + wv.BaseOneIndex
 	}
 	next++
 	indexStr := strconv.Itoa(index)
 	nextStr := strconv.Itoa(next)
 	if len(nextStr) != _LENGTH {
-		nextStr = _ZERO_PREFEX + nextStr
+		nextStr = wv.BaseIndexStr + nextStr
 	}
 
 	finalURL := strings.ReplaceAll(url, indexStr, nextStr)

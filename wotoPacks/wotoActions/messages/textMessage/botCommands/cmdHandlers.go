@@ -6,14 +6,15 @@
 package botCommands
 
 import (
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoMorse"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func toMorse_handler(message *tgbotapi.Message, args []string) {
+func toMorse_handler(message *tgbotapi.Message, args pTools.Arg) {
 	wotoMorse.ToMorse_handler(message, args)
 }
 
-func fromMorse_handler(message *tgbotapi.Message, args []string) {
+func fromMorse_handler(message *tgbotapi.Message, args pTools.Arg) {
 	wotoMorse.FromMorse_handler(message, args)
 }

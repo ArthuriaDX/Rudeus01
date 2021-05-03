@@ -5,26 +5,20 @@
 
 package botCommands
 
-import (
-	"log"
-
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-)
-
 // sudo commands
 const (
 	TMORSe_CMD = "tmorse"
 	FMORSE_CMD = "fmorse"
 )
 
-var cmdList map[string]func(*tgbotapi.Message, []string)
+var cmdList map[string]CmdHandler
 
 func cmdListInit() {
 	if cmdList != nil {
 		return
 	}
-	log.Println("In Init!")
-	cmdList = make(map[string]func(*tgbotapi.Message, []string))
+	// log.Println("In Init!")
+	cmdList = make(map[string]CmdHandler)
 	add_morseCmdList()
 }
 

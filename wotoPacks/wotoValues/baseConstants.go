@@ -12,4 +12,12 @@ const (
 	BaseTimeOut  = 40 // 40 seconds
 )
 
+// the string base constant values.
+const (
+	BaseIndexStr    = "0" // number 0
+	BaseOneIndexStr = "1" // number 1
+	DotStr          = "." // dot : .
+	LineStr         = "-" // line : -
+)
+
 var DebugMode bool

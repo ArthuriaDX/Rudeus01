@@ -9,9 +9,12 @@ import (
 	"log"
 	"strings"
 
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
+
+type CmdHandler func(*tgbotapi.Message, pTools.Arg)
 
 // IsCommand will check if the _text is a command or not.
 func IsCommand(_text *string) bool {

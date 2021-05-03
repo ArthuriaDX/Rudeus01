@@ -12,7 +12,9 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoChilds"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/gin-gonic/gin"
@@ -57,8 +59,8 @@ func answerClient(c *gin.Context) {
 		log.Println(wv.INVALID_ENGINE)
 		os.Exit(wv.BaseIndex)
 	}
-	result, client := wotoActions.GenerateClient()
-	if result != wotoActions.SUCCESS {
+	result, client := wotoDB.GenerateClient(wotoActions.SendSudo)
+	if result != common.SUCCESS {
 		log.Fatal(wv.WOTO_CLIENT_ERROR)
 	}
 	wotoActions.RunBot(_settings, client)
