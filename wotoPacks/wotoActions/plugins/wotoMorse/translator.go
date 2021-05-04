@@ -15,6 +15,12 @@ import (
 // TranslateToMorse will translate the specified text value
 // to the morse value
 func TranslateToMorse(text string) string {
+	return ToMorse(TranslateToBinary(text))
+}
+
+// TranslateToMorse will translate the specified text value
+// to the morse value
+func TranslateToBinary(text string) string {
 	morseInit()
 	var morseSequence string
 
@@ -27,12 +33,6 @@ func TranslateToMorse(text string) string {
 	}
 
 	return morseSequence
-}
-
-// TranslateToMorse will translate the specified text value
-// to the morse value
-func TranslateToBinary(text string) string {
-	return ToBinary(TranslateToMorse(text))
 }
 
 // TranslateFromMorse will translate the morseSequence value to

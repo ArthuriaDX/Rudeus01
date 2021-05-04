@@ -6,8 +6,6 @@
 package textMessage
 
 import (
-	"log"
-
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage/botCommands"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -19,10 +17,10 @@ func HandleTextMessage(message *tgbotapi.Message) {
 	if botCommands.IsSudoCommand(&message.Text) {
 		botCommands.HandleSudoCommand(message)
 	} else if botCommands.IsCommand(&message.Text) {
-		log.Println("Is HERE!")
+		//log.Println("Is HERE!")
 		botCommands.HandleCommand(message)
 	} else {
-		log.Println("In ELSeE!")
+		//log.Println("In ELSeE!")
 	}
 
 }

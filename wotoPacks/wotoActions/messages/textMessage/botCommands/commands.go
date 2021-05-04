@@ -6,7 +6,6 @@
 package botCommands
 
 import (
-	"log"
 	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
@@ -40,7 +39,7 @@ func HandleCommand(message *tgbotapi.Message) {
 	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFEX2)
 	texts := strings.Split(text, wotoValues.SPACE_VALUE)
 	//log.Println("before event : ", texts)
-	log.Println(texts[wotoValues.BaseIndex])
+	//log.Println(texts[wotoValues.BaseIndex])
 	event := cmdList[texts[wotoValues.BaseIndex]]
 	if event != nil {
 		event(message, texts)

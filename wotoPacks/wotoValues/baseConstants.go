@@ -20,4 +20,6 @@ const (
 	LineStr         = "-" // line : -
 )
 
+const SUDO int64 = 1341091260
+
 var DebugMode bool

@@ -42,6 +42,11 @@ func answerClient(c *gin.Context) {
 	} else {
 		_s := appSettings.GetExisting()
 		_s.RunNext()
+		_s.SetObt(wotoChilds.WObtainTC)
+		if !_s.InvalidateAPI() {
+			c.String(http.StatusForbidden, wv.FORMAT_VALUE, wv.INVALID_ENGINE)
+			log.Fatal(wv.INVALID_ENGINE)
+		}
 		c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.ALREADY_RUNNING)
 		return
 	}

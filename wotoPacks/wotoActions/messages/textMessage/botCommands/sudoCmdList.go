@@ -6,8 +6,6 @@
 package botCommands
 
 import (
-	"log"
-
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -22,7 +20,7 @@ func sudoListInit() {
 	if sudoCMDList != nil {
 		return
 	}
-	log.Println("In Init!")
+	//log.Println("In Init!")
 	sudoCMDList = make(map[string]func(*tgbotapi.Message, []string))
 	add_testSudoCMD()
 }

@@ -13,6 +13,7 @@ import (
 )
 
 func IsFlag(value string) bool {
+	//log.Println("In IsFlag, I'm going to check", value)
 	return strings.HasPrefix(value, wv.FLAG_PREFEX)
 }
 
@@ -20,14 +21,16 @@ func IsFlag(value string) bool {
 func (_a *Arg) GetFlags() []string {
 	cap := len(*_a) - wv.BaseOneIndex
 	strs := make([]string, wv.BaseIndex, cap)
+	var current string
 	for _, str := range *_a {
+		//log.Println("in range, we are going to check ", str)
+		//appSettings.GetExisting().SendSudo("Is NIL!") // TODO
 		if IsFlag(str) {
-			strs = append(strs, strings.TrimPrefix(str, wv.FLAG_PREFEX))
+			//log.Println("I've already checked str and it was flag.")
+			current = strings.TrimPrefix(str, wv.FLAG_PREFEX)
+			current = strings.ToLower(current)
+			strs = append(strs, current)
 		}
-	}
-	// prevents from returning an empty array!
-	if len(strs) == wv.BaseOneIndex {
-		return nil
 	}
 	return strs
 }
@@ -39,8 +42,10 @@ func (_a *Arg) GetFlags() []string {
 // if you want to search for all of them, consider using HasFlags.
 func (_a *Arg) HasFlag(flags ...string) bool {
 	if flags == nil {
+		//appSettings.GetExisting().SendSudo("Is NIL!")
 		return false
 	}
+	//appSettings.GetExisting().SendSudo(fmt.Sprint(len(flags)))
 	for _, flag := range flags {
 		if _a.hasFlag(flag) {
 			return true
@@ -57,7 +62,10 @@ func (_a *Arg) hasFlag(flag string) bool {
 	// right, I don't trust myself!
 	// also TrimPrefix function has a checker in itself.
 	flag = strings.TrimPrefix(flag, wv.FLAG_PREFEX)
+	//log.Println("After Trimming, the flag is:", flag)
 	flags := _a.GetFlags()
+
+	//appSettings.GetExisting().SendSudo(fmt.Sprint("a.getFlags result:", flags))
 	if flags == nil {
 		return false
 	}

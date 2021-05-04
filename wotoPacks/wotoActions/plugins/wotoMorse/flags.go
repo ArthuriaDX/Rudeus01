@@ -11,6 +11,7 @@ package wotoMorse
 // removed.
 const (
 	BIN_FLAG     = "bin"
+	BINARY_FLAG  = "binary"
 	PV_FLAG      = "pv"
 	PRIVATE_FLAG = "private"
 )

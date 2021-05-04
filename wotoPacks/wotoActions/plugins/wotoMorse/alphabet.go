@@ -43,15 +43,17 @@ func init_reverse() {
 // ToBinary will convert a morse string to binary string.
 // for example it will convert ".-.-" to "0101"
 func ToBinary(value string) string {
-	str := strings.ReplaceAll(value, wv.BaseIndexStr, wv.DotStr)
-	str = strings.ReplaceAll(str, wv.BaseOneIndexStr, wv.LineStr)
+	str := strings.ReplaceAll(value, wv.DotStr, wv.BaseIndexStr)
+	str = strings.ReplaceAll(str, wv.LineStr, wv.BaseOneIndexStr)
+
 	return str
 }
 
 // ToMorse will convert a binary string to morse string.
 // for example it will convert "0101" to ".-.-"
 func ToMorse(value string) string {
-	str := strings.ReplaceAll(value, wv.DotStr, wv.BaseIndexStr)
-	str = strings.ReplaceAll(str, wv.LineStr, wv.BaseOneIndexStr)
+	str := strings.ReplaceAll(value, wv.BaseIndexStr, wv.DotStr)
+	str = strings.ReplaceAll(str, wv.BaseOneIndexStr, wv.LineStr)
+
 	return str
 }
