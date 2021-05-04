@@ -8,7 +8,7 @@ package pTools
 import (
 	"strings"
 
-	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 

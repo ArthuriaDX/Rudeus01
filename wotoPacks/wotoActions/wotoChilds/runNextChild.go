@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
@@ -21,7 +21,7 @@ const (
 // RunNextChild will run the next child. please consider that the url
 // is the current child url, not the next one.
 func RunNextChild(url string, settings *appSettings.AppSettings) {
-	if wotoSecurity.IsEmpty(&url) || settings == nil {
+	if ws.IsEmpty(&url) || settings == nil {
 		return
 	}
 	var next int
@@ -41,7 +41,7 @@ func RunNextChild(url string, settings *appSettings.AppSettings) {
 	}
 
 	finalURL := strings.ReplaceAll(url, indexStr, nextStr)
-	if !wotoSecurity.IsEmpty(&finalURL) {
+	if !ws.IsEmpty(&finalURL) {
 		settings.SetNextURL(finalURL)
 	}
 	settings.RunNext()

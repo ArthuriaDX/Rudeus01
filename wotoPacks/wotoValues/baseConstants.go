@@ -18,6 +18,7 @@ const (
 	BaseOneIndexStr = "1" // number 1
 	DotStr          = "." // dot : .
 	LineStr         = "-" // line : -
+	EMPTY           = ""  //an empty string.
 )
 
 const SUDO int64 = 1341091260

@@ -8,7 +8,6 @@ package wotoMorse
 import (
 	"strings"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
@@ -26,7 +25,7 @@ func TranslateToBinary(text string) string {
 
 	text = strings.ToUpper(text)
 	text = strings.Trim(text, wv.SPACE_VALUE)
-	textSlice := strings.Split(text, wotoSecurity.EMPTY)
+	textSlice := strings.Split(text, wv.EMPTY)
 
 	for _, char := range textSlice {
 		morseSequence += _alphabet[char] + wv.SPACE_VALUE

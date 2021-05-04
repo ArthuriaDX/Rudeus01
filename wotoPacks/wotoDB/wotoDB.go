@@ -19,47 +19,26 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB/dbTypes"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// the DATABASE type
-type DATABASE string
-type COLLECTION string
-
 // the WotoClient struct which will act as a client in the program
 type WotoClient struct {
 	client          *mongo.Client
 	ctx             *context.Context
-	opt             *options.ClientOptions
 	settings        *appSettings.AppSettings
 	MainHostAddress string
-	DataBase1       DATABASE
+	DataBase1       dbTypes.DATABASE
 	ctxCancel       func()
 	SendSudo        func(string, *appSettings.AppSettings)
 }
 
-const (
-	// the main data base of the program
-	MainDataBase DATABASE = "bgrsx76y6idxwuk"
-	// the DefaultDatabase of the program
-	DefaultDatabase = MainDataBase
-)
-const (
-	// ConfigurationCollection is for configuration of the status of the players
-	ConfigurationCollection COLLECTION = "Configuration"
-	// UsersCollection is the main user collection :/
-	UsersCollection COLLECTION = "Users"
-	// SecuredCollection
-	SecuredCollection COLLECTION = "Secured"
-	// PlayerInfoCollection
-	PlayerInfoCollection COLLECTION = "PlayerInfo"
-	// OnlineTokenCollection
-	OnlineTokenCollection COLLECTION = "OnlineTokens"
-)
+//opt             *options.ClientOptions
 
 // EMPTY is an empty string which is used in many many parts of the program :|
 const EMPTY string = ""
@@ -115,7 +94,7 @@ func (_c *WotoClient) PingClientDB(_report bool) {
 	}
 }
 
-// setClient, will set the client field of the WotoClient struct
+// _setClient, will set the client field of the WotoClient struct
 func (_c *WotoClient) _setClient() {
 	//_c.opt = options.Client().ApplyURI(hostAddress)
 	//client, _err := mongo.Connect(context.TODO(), _c.opt)
@@ -157,21 +136,21 @@ func (_c *WotoClient) _setSettings() {
 
 func (_c *WotoClient) _setHosts() {
 	_s := os.Getenv(wotoValues.HOST_ADDRESS1_KEY)
-	if wotoSecurity.IsEmpty(&_s) {
+	if wotoStrings.IsEmpty(&_s) {
 		log.Fatal(wotoValues.HOST_ADDRESS_NOTSET)
 	}
 	_c.MainHostAddress = _s
 
 	_s = os.Getenv(wotoValues.DATEBASE1_KEY)
-	if wotoSecurity.IsEmpty(&_s) {
+	if wotoStrings.IsEmpty(&_s) {
 		log.Fatal(wotoValues.DATABASE1_NOTSET)
 	}
-	_c.DataBase1 = DATABASE(_s)
+	_c.DataBase1 = dbTypes.DATABASE(_s)
 }
 
 // getDataBase returns a database with the specified DATABASE value.
 // use DefaultDatabase to get a default database
-func (_c *WotoClient) getDataBase(database DATABASE) *mongo.Database {
+func (_c *WotoClient) getDataBase(database dbTypes.DATABASE) *mongo.Database {
 	switch database {
 	case DefaultDatabase:
 		_d := _c.client.Database(string(database))
@@ -182,12 +161,14 @@ func (_c *WotoClient) getDataBase(database DATABASE) *mongo.Database {
 }
 
 // getCollection will give you the specified collection.
-func (_c *WotoClient) getCollection(database DATABASE, collection COLLECTION) *mongo.Collection {
+func (_c *WotoClient) getCollection(database dbTypes.DATABASE,
+	collection dbTypes.COLLECTION) *mongo.Collection {
 	return _c.getDataBase(database).Collection(string(collection))
 }
 
 // DeleteCollection will delete the specified collection.
-func (_c *WotoClient) DeleteCollection(database DATABASE, collection COLLECTION) wa.RESULT {
+func (_c *WotoClient) DeleteCollection(database dbTypes.DATABASE,
+	collection dbTypes.COLLECTION) wa.RESULT {
 	_collection := _c.getCollection(database, collection)
 	if _collection == nil {
 		return wa.FAILED
@@ -200,7 +181,7 @@ func (_c *WotoClient) DeleteCollection(database DATABASE, collection COLLECTION)
 }
 
 // getRAWS will give you the raw data.
-func (_c *WotoClient) getRAWS(database DATABASE, collection COLLECTION) (wa.RESULT, []bson.M) {
+func (_c *WotoClient) getRAWS(database dbTypes.DATABASE, collection dbTypes.COLLECTION) (wa.RESULT, []bson.M) {
 	_collection := _c.getCollection(database, collection)
 	if _collection == nil {
 		clientError()
@@ -418,30 +399,4 @@ func (_c *WotoClient) UpdateAccountOnlineToken() wa.RESULT {
 	//	}
 	//}
 	return wa.FAILED
-}
-func (_c *WotoClient) CheckOnlineToken() (wa.RESULT, bool) {
-	//_re, _raws := _c.getRAWS(MainDataBase, OnlineTokenCollection)
-	//if _re != SUCCESS {
-	//	return FAILED, false
-	//}
-	//for _, _current := range _raws {
-	//	_value, _ok := _current[PlayerUIDValue].(string)
-	//	if !_ok {
-	//		return FAILED, false
-	//	}
-	//	_uid := UID(_value)
-	//	if _a.PlayerUID.isEqual(&_uid) {
-	//		_value, _ok = _current[OnlineTokenValue].(string)
-	//		if !_ok {
-	//			return FAILED, false
-	//		}
-	//		_token := wotoToken(_value)
-	//		if _a.LastToken.isEqual(&_token) {
-	//			return SUCCESS, true
-	//		} else {
-	//			return SUCCESS, false
-	//		}
-	//	}
-	//}
-	return wa.FAILED, false
 }

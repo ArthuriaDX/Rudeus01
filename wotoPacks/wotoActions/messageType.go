@@ -6,9 +6,9 @@
 package wotoActions
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type MessageType uint8
@@ -19,7 +19,7 @@ const (
 	GIF_MESSAGE  MessageType = 2
 )
 
-func getMessageType(_update *tgbotapi.Update) MessageType {
+func getMessageType(_update *tg.Update) MessageType {
 	if _checkTextMessage(_update) {
 		return TEXT_MESSAGE
 	}
@@ -31,12 +31,12 @@ func getMessageType(_update *tgbotapi.Update) MessageType {
 	return NONE
 }
 
-func _checkTextMessage(_update *tgbotapi.Update) bool {
+func _checkTextMessage(_update *tg.Update) bool {
 	_msg := _update.Message
 	if _msg == nil {
 		return false
 	}
-	if _msg.MessageID == wotoValues.BaseIndex {
+	if _msg.MessageID == wv.BaseIndex {
 		return false
 	}
 	if _msg.From == nil {
@@ -45,10 +45,10 @@ func _checkTextMessage(_update *tgbotapi.Update) bool {
 	if _msg.Chat == nil {
 		return false
 	}
-	if _msg.Date == wotoValues.BaseIndex {
+	if _msg.Date == wv.BaseIndex {
 		return false
 	}
-	if wotoSecurity.IsEmpty(&_msg.Text) {
+	if ws.IsEmpty(&_msg.Text) {
 		return false
 	}
 	if _msg.Animation != nil {
@@ -57,7 +57,7 @@ func _checkTextMessage(_update *tgbotapi.Update) bool {
 	if _msg.Document != nil {
 		return false
 	}
-	if !wotoSecurity.IsEmpty(&_msg.Caption) {
+	if !ws.IsEmpty(&_msg.Caption) {
 		return false
 	}
 	if _msg.Photo != nil {
@@ -75,7 +75,7 @@ func _checkTextMessage(_update *tgbotapi.Update) bool {
 	return true
 }
 
-func _checkGifMessage(_update *tgbotapi.Update) bool {
+func _checkGifMessage(_update *tg.Update) bool {
 
 	return false
 }

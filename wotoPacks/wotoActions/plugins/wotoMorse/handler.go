@@ -11,13 +11,13 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
-	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func ToMorse_handler(message *tg.Message, args pTools.Arg) {
-	args[wv.BaseIndex] = ws.EMPTY
+	args[wv.BaseIndex] = wv.EMPTY
 	is_bin := args.HasFlag(BIN_FLAG, BINARY_FLAG)
 	send_pv := args.HasFlag(PV_FLAG, PRIVATE_FLAG)
 	//appSettings.GetExisting().SendSudo(fmt.Sprint(args))
@@ -50,7 +50,7 @@ func ToMorse_handler(message *tg.Message, args pTools.Arg) {
 }
 
 func FromMorse_handler(message *tg.Message, args pTools.Arg) {
-	args[wv.BaseIndex] = ws.EMPTY
+	args[wv.BaseIndex] = wv.EMPTY
 	is_reply := message.ReplyToMessage != nil
 	send_pv := args.HasFlag(PV_FLAG, PRIVATE_FLAG)
 	var full string

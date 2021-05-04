@@ -9,14 +9,14 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func (_s *AppSettings) InvalidateAPI() bool {
 	if _s._apiObtain != nil {
-		_s.isGlobal = !wotoSecurity.IsEmpty(&_s.tObt)
+		_s.isGlobal = !ws.IsEmpty(&_s.tObt)
 		b := _s._apiObtain(_s)
 		if !b {
 			if _s._nextChild != nil {
@@ -39,7 +39,7 @@ func App_exit() {
 }
 
 func (_s *AppSettings) RunNext() {
-	if !wotoSecurity.IsEmpty(&_s.nextUrl) {
+	if !ws.IsEmpty(&_s.nextUrl) {
 		go func() {
 			_, _err := http.Get(_s.nextUrl)
 			if _err != nil {

@@ -15,7 +15,7 @@ import (
 	"strconv"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
@@ -34,12 +34,12 @@ func WObtainTC(_settings *appSettings.AppSettings) bool {
 		log.Fatal(err)
 	}
 	indexStr := os.Getenv(wotoValues.INDEX_KEY)
-	if wotoSecurity.IsEmpty(&indexStr) {
+	if ws.IsEmpty(&indexStr) {
 		_settings.SetIndex(wotoValues.BaseIndex)
 		return true
 	}
 	url := os.Getenv(wotoValues.RUDEUS_URL_KEY)
-	if !wotoSecurity.IsEmpty(&url) {
+	if !ws.IsEmpty(&url) {
 		_settings.SetURL(url)
 	} else {
 		log.Println()

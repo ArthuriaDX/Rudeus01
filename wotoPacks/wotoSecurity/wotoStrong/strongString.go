@@ -1,18 +1,11 @@
-package wotoSecurity
+package wotoStrong
 
 import (
 	"strconv"
 	"strings"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-)
-
-const (
-	// the LineSeparator used in separating the byte values in the
-	// StrongString.
-	LineSeparator = "-"
-	// EMPTY is an empty string.
-	EMPTY = ""
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
 const (
@@ -34,12 +27,6 @@ type StrongString struct {
 	_value []rune
 }
 
-// IsEmpty function will check if the passed-by
-// string value is empty or not.
-func IsEmpty(_s *string) bool {
-	return _s == nil || *_s == EMPTY
-}
-
 // generateStrongString will generate a new StrongString
 // with the specified non-encoded string value.
 func GenerateStrongString(_s string) StrongString {
@@ -53,7 +40,7 @@ func GenerateStrongString(_s string) StrongString {
 // data base.
 func GetStrong(_s string) StrongString {
 	_strong := StrongString{}
-	myBytes := toByteArrayS(_s, LineSeparator)
+	myBytes := toByteArrayS(_s, wv.LineStr)
 	_strong._setValueByBytes(myBytes)
 	return _strong
 }
@@ -70,7 +57,7 @@ func _toByteArray(myStrings []string) []rune {
 
 // convert the specified string (encoded) to byte array.
 func toByteArrayS(theString string, separator string) []rune {
-	return _toByteArray(FixSplit(strings.Split(theString, separator)))
+	return _toByteArray(ws.FixSplit(strings.Split(theString, separator)))
 }
 
 // convertToBytes will convert an ordinaryString (non-encoded) to byte array.
@@ -85,63 +72,22 @@ func convertToBytes(ordinaryString string) []rune {
 
 // ConvertToString will convert the specified byte arrays to string.
 func ConvertToString(_b []rune) string {
-	_total := EMPTY
+	_total := wv.EMPTY
 	for _, _current := range _b {
 		_total += string(_current - StrongOffSet)
 	}
 	return _total
 }
 
-func Split(_s string, separator ...string) []string {
-	if len(separator) == wotoValues.BaseIndex {
-		return nil
-	}
-	_firstSet := false
-	var (
-		_shallow   string
-		_myStrings []string
-	)
-	for _, _current := range separator {
-		if strings.Contains(_s, _current) {
-			if !_firstSet {
-				_myStrings = strings.Split(_s, _current)
-				_myStrings = FixSplit(_myStrings)
-				_firstSet = true
-				continue
-			}
-			_shallow = strings.Join(_myStrings, EMPTY)
-			_myStrings = strings.Split(_shallow, _current)
-			_myStrings = FixSplit(_myStrings)
-		}
-	}
-	if !_firstSet {
-		_myStrings = make([]string, BaseUIDIndex)
-		_myStrings[BaseUIDIndex] = _s
-	}
-	return _myStrings
-}
-
-// FixSplit will fix the bullshit bug in the
-// Split function (which is not ignoring the spaces between strings).
-func FixSplit(_myStrings []string) []string {
-	final := make([]string, 0, cap(_myStrings))
-	for _, _current := range _myStrings {
-		if !IsEmpty(&_current) {
-			final = append(final, _current)
-		}
-	}
-	return final
-}
-
 // _getString will give you an encoded string with the High-security
 // level which you should use it in the database.
 func (_s *StrongString) GetString() string {
 	var _current int
-	var total = EMPTY
+	var total = wv.EMPTY
 	for _, b := range _s._value {
 		_current = int(b)
 		total += strconv.Itoa(_current)
-		total += LineSeparator
+		total += wv.LineStr
 	}
 	return total
 }
@@ -169,7 +115,7 @@ func (_s *StrongString) Length() int {
 
 // isEmpty will check if this StrongString is empty or not.
 func (_s *StrongString) IsEmpty() bool {
-	return IsEmpty(_s.GetValue())
+	return ws.IsEmpty(_s.GetValue())
 }
 
 // isEqual will check if the passed-by-value in the arg is equal to this

@@ -6,12 +6,12 @@
 package appSettings
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	"github.com/gin-gonic/gin"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (_s *AppSettings) SetAPI(_api *tgbotapi.BotAPI) {
+func (_s *AppSettings) SetAPI(_api *tg.BotAPI) {
 	_s.botAPI = _api
 }
 
@@ -24,13 +24,13 @@ func (_s *AppSettings) SetNextChild(_nextRunner func(string, *AppSettings)) {
 }
 
 func (_s *AppSettings) SetURL(_url string) {
-	if !wotoSecurity.IsEmpty(&_url) {
+	if !ws.IsEmpty(&_url) {
 		_s.url = _url
 	}
 }
 
 func (_s *AppSettings) SetNextURL(_url string) {
-	if !wotoSecurity.IsEmpty(&_url) {
+	if !ws.IsEmpty(&_url) {
 		_s.nextUrl = _url
 	}
 }
