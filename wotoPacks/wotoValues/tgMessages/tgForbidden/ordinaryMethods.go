@@ -17,7 +17,7 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 		return
 	}
 
-	switch time.Second % wv.BaseTwoIndex {
+	switch time.Now().Second() % wv.BaseTwoIndex {
 	case wv.BaseIndex:
 		if _f.IsPrivateMessageError() {
 			str := tgConst.PV_WARN_M01
@@ -31,6 +31,18 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 			msg := tg.NewMessage(message.Chat.ID, str)
 			msg.ReplyToMessageID = message.MessageID
 			msg.ParseMode = tg.ModeMarkdownV2
+
+			pmMe := wotoMD.GetNormal(tgConst.SEND_MESSAGE_M01).ToString()
+			burl := tgConst.BOT_START_M01
+			tgConst.ReplaceDynBot(&burl, api)
+
+			buttons := tg.NewInlineKeyboardMarkup(
+				tg.NewInlineKeyboardRow(
+					tg.NewInlineKeyboardButtonURL(pmMe, burl),
+				),
+			)
+			msg.ReplyMarkup = buttons
+
 			if _, err := api.Send(msg); err != nil {
 				settings.SendSudo(err.Error())
 			}
@@ -54,6 +66,17 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 			msg := tg.NewMessage(message.Chat.ID, str)
 			msg.ReplyToMessageID = message.MessageID
 			msg.ParseMode = tg.ModeMarkdownV2
+
+			pmMe := wotoMD.GetNormal(tgConst.SEND_MESSAGE_M02).ToString()
+			burl := tgConst.BOT_START_M01
+			tgConst.ReplaceDynBot(&burl, api)
+
+			buttons := tg.NewInlineKeyboardMarkup(
+				tg.NewInlineKeyboardRow(
+					tg.NewInlineKeyboardButtonURL(pmMe, burl),
+				),
+			)
+			msg.ReplyMarkup = buttons
 			if _, err := api.Send(msg); err != nil {
 				settings.SendSudo(err.Error())
 			}

@@ -129,7 +129,6 @@ func sendMorse(message *tg.Message, morse *string, reply, pv bool) {
 		log.Println(err)
 		tgErr := tgMessages.GetTgError(err)
 		tgErr.SendRandomErrorMessage(message)
-		settings.SendSudo(err.Error())
 		return
 	}
 }

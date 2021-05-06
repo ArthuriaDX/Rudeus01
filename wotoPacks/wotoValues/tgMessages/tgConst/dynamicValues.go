@@ -3,7 +3,6 @@ package tgConst
 import (
 	"strings"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -11,6 +10,7 @@ import (
 
 const (
 	USER_NAME          = "$WOTO_USER_NAME"
+	BOT_USERNAME       = "$WOTO_BOT_USERNAME"
 	FIRST_NAME         = "$WOTO_FIRST_NAME"
 	USER_NAME_MENTION  = "$WOTO_USERNAME_MENTION"
 	FIRST_NAME_MENTION = "$WOTO_FIRSTNAME_MENTION"
@@ -56,5 +56,17 @@ func ReplaceDyn(value *string, msg *tg.Message) {
 		tmp = strings.ReplaceAll(*value, md, tmp)
 		*value = tmp
 	}
-	appSettings.GetExisting().SendSudo(*value)
+	//appSettings.GetExisting().SendSudo(*value)
+}
+
+func ReplaceDynBot(value *string, api *tg.BotAPI) {
+	*value = wotoMD.GetNormal(*value).ToString()
+	var tmp, md, userMd string
+
+	md = wotoMD.GetNormal(BOT_USERNAME).ToString()
+	if strings.Contains(*value, md) {
+		userMd = wotoMD.GetNormal(api.Self.UserName).ToString()
+		tmp = strings.ReplaceAll(*value, md, userMd)
+		*value = tmp
+	}
 }
