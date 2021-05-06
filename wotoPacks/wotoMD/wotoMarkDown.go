@@ -41,8 +41,8 @@ func GetMono(value string) interfaces.WMarkDown {
 // this function will check it itself.
 func GetUserMention(text string, userID int64) interfaces.WMarkDown {
 	final := repairValue(text)
-	final = string(CHAR_S7) + text +
-		string(CHAR_S8) + final +
+	final = string(CHAR_S7) + final +
+		string(CHAR_S8) +
 		string(CHAR_S9) + TG_USER_ID +
 		strconv.FormatInt(userID, wv.BaseTen) +
 		string(CHAR_S10)
