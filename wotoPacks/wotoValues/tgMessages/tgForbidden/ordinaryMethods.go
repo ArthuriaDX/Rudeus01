@@ -70,7 +70,7 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 			pmMe := wotoMD.GetNormal(tgConst.SEND_MESSAGE_M02).ToString()
 			burl := tgConst.BOT_START_M01
 			tgConst.ReplaceDynBot(&burl, api)
-
+			settings.SendSudo(burl)
 			buttons := tg.NewInlineKeyboardMarkup(
 				tg.NewInlineKeyboardRow(
 					tg.NewInlineKeyboardButtonURL(pmMe, burl),
