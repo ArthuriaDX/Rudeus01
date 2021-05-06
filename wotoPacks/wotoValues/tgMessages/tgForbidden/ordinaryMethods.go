@@ -32,13 +32,14 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 			msg.ReplyToMessageID = message.MessageID
 			msg.ParseMode = tg.ModeMarkdownV2
 
-			pmMe := wotoMD.GetNormal(tgConst.SEND_MESSAGE_M01).ToString()
 			burl := tgConst.BOT_START_M01
 			tgConst.ReplaceDynBot(&burl, api)
 
+			text := tgConst.SEND_MESSAGE_M01
+			b01 := tg.NewInlineKeyboardButtonURL(text, burl)
 			buttons := tg.NewInlineKeyboardMarkup(
 				tg.NewInlineKeyboardRow(
-					tg.NewInlineKeyboardButtonURL(pmMe, burl),
+					b01,
 				),
 			)
 			msg.ReplyMarkup = buttons
@@ -67,13 +68,14 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 			msg.ReplyToMessageID = message.MessageID
 			msg.ParseMode = tg.ModeMarkdownV2
 
-			pmMe := wotoMD.GetNormal(tgConst.SEND_MESSAGE_M02).ToString()
 			burl := tgConst.BOT_START_M01
 			tgConst.ReplaceDynBot(&burl, api)
-			settings.SendSudo(burl)
+
+			text := tgConst.SEND_MESSAGE_M02
+			b01 := tg.NewInlineKeyboardButtonURL(text, burl)
 			buttons := tg.NewInlineKeyboardMarkup(
 				tg.NewInlineKeyboardRow(
-					tg.NewInlineKeyboardButtonURL(pmMe, burl),
+					b01,
 				),
 			)
 			msg.ReplyMarkup = buttons
