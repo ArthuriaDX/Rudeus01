@@ -60,13 +60,10 @@ func ReplaceDyn(value *string, msg *tg.Message) {
 }
 
 func ReplaceDynBot(value *string, api *tg.BotAPI) {
-	*value = wotoMD.GetNormal(*value).ToString()
-	var tmp, md, userMd string
+	var tmp string
 
-	md = wotoMD.GetNormal(BOT_USERNAME).ToString()
-	if strings.Contains(*value, md) {
-		userMd = wotoMD.GetNormal(api.Self.UserName).ToString()
-		tmp = strings.ReplaceAll(*value, md, userMd)
+	if strings.Contains(*value, BOT_USERNAME) {
+		tmp = strings.ReplaceAll(*value, BOT_USERNAME, api.Self.UserName)
 		*value = tmp
 	}
 }
