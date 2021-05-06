@@ -3,7 +3,7 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE', which is part of the source code.
 
-package tgMessages
+package tgForbidden
 
 import "strings"
 
@@ -14,13 +14,21 @@ const (
 	START_CHAT = "Forbidden: bot can't initiate conversation with a user"
 )
 
-func IsForbidden(err error) bool {
+type ForbiddenError struct {
+	_value string
+}
+
+func GetForbidden(err error) (*ForbiddenError, bool) {
 	str := err.Error()
-	if strings.Contains(str, START_CHAT) {
-		return true
-	}
 	if strings.Contains(str, FORBIDDEN) {
-		return true
+		fr := ForbiddenError{
+			_value: str,
+		}
+		return &fr, true
 	}
-	return false
+	return nil, false
+}
+
+func (_f *ForbiddenError) IsPrivateMessageError() bool {
+	return strings.Contains(_f._value, START_CHAT)
 }

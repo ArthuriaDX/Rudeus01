@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrong"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
@@ -106,10 +105,10 @@ func getSMorse(binary string) string {
 	// value.
 	num, err = strconv.ParseInt(myStrings[wv.BaseOneIndex],
 		wv.BaseTwoIndex, wv.Base64Bit)
-	appSettings.GetExisting().SendSudo("HERE " + binary)
 	if err != nil {
 		return wv.EMPTY
 	}
+	myStr := string(rune(num))
 
-	return string(rune(num))
+	return myStr
 }

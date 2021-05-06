@@ -1,6 +1,10 @@
 package wotoMD
 
 const (
+	TG_USER_ID = `tg://user?id=`
+)
+
+const (
 	CHAR_S1  = '\\'
 	CHAR_S2  = '\''
 	CHAR_S3  = '*'

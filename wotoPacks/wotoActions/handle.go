@@ -14,10 +14,14 @@ import (
 // shouldHangle will check if you should handle the
 // update or not.
 func shouldHangle(_update *tgbotapi.Update) bool {
+
 	return true
 }
 
 func HandleMessage(update *tgbotapi.Update, _settings interfaces.WSettings) {
+	if update.CallbackQuery != nil {
+		_settings.SendSudo(update.CallbackQuery.Data)
+	}
 	switch getMessageType(update) {
 	case NONE:
 		return

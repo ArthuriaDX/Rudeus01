@@ -14,6 +14,7 @@ import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -107,6 +108,7 @@ func sendMorse(message *tg.Message, morse *string, reply, pv bool) {
 		//settings.SendSudo(strconv.Itoa(int(message.Chat.ID)))
 		msg = tg.NewMessage(message.Chat.ID, (*morse))
 	}
+
 	// !pv => for fixing: Bad Request: replied message not found
 	if reply && !pv {
 		r := message.ReplyToMessage
@@ -125,6 +127,8 @@ func sendMorse(message *tg.Message, morse *string, reply, pv bool) {
 	if _, err := api.Send(msg); err != nil {
 
 		log.Println(err)
+		tgErr := tgMessages.GetTgError(err)
+		tgErr.SendRandomErrorMessage(message)
 		settings.SendSudo(err.Error())
 		return
 	}

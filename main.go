@@ -6,6 +6,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -23,6 +24,17 @@ import (
 )
 
 func main() {
+	resp, err1 := http.Get("https://api.urbandictionary.com/v0/define?term=mamad")
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	str, err2 := ioutil.ReadAll(resp.Body)
+	if err2 != nil {
+		log.Fatal(err2)
+	}
+	log.Println(string(str))
+
 	port := os.Getenv(wv.APP_PORT)
 	if ws.IsEmpty(&port) {
 		log.Fatal(wv.PORT_ERROR)
