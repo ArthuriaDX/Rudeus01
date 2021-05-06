@@ -47,12 +47,13 @@ func ReplaceDyn(value *string, msg *tg.Message) {
 		*value = tmp
 	}
 
+	md = wotoMD.GetNormal(FIRST_NAME_MENTION).ToString()
 	if strings.Contains(*value, FIRST_NAME_MENTION) {
 		// msg.From.ID doesn't need to be repaired at all,
 		// and also msg.From.FirstName will be repaired inside of the
 		// function, so there is no need to repair for it.
 		tmp = wotoMD.GetUserMention(msg.From.FirstName, msg.From.ID).ToString()
-		tmp = strings.ReplaceAll(*value, USER_NAME_MENTION, tmp)
+		tmp = strings.ReplaceAll(*value, md, tmp)
 		*value = tmp
 	}
 	appSettings.GetExisting().SendSudo(*value)
