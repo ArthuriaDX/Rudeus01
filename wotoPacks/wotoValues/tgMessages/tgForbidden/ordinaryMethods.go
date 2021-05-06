@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages/tgConst"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -52,11 +51,10 @@ func (_f *ForbiddenError) SendRandomErrorMessage(message *tg.Message) {
 		} else {
 			goto invalidErr
 		}
-		//md :=
-		//str = strings.ReplaceAll("", "", "")
+
 	case wv.BaseOneIndex:
 		if _f.IsPrivateMessageError() {
-			str := wotoMD.GetNormal(tgConst.PV_WARN_M02).ToString()
+			str := tgConst.PV_WARN_M02
 			tgConst.ReplaceDyn(&str, message)
 
 			api := settings.GetAPI()

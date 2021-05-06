@@ -9,7 +9,7 @@ const (
 		`, I can't send you any message, ` +
 		`unless you send me a message!`
 	SEND_MESSAGE_M01 = `🔙Send me a message >.<`
-	SEND_MESSAGE_M02 = `🔙PM me right now! ^.^`
+	SEND_MESSAGE_M02 = `🔙PM me right now ^.^`
 	BOT_START_M01    = `https://t.me/` +
 		BOT_USERNAME
 )
