@@ -48,7 +48,7 @@ func ReplaceDyn(value *string, msg *tg.Message) {
 	}
 
 	md = wotoMD.GetNormal(FIRST_NAME_MENTION).ToString()
-	if strings.Contains(*value, FIRST_NAME_MENTION) {
+	if strings.Contains(*value, md) {
 		// msg.From.ID doesn't need to be repaired at all,
 		// and also msg.From.FirstName will be repaired inside of the
 		// function, so there is no need to repair for it.
