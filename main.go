@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoChilds"
@@ -30,7 +31,7 @@ func main() {
 	runApp(settings)
 }
 
-func runApp(_settings *appSettings.AppSettings) {
+func runApp(_settings interfaces.WSettings) {
 	router := _settings.GetRouter()
 	router.Use(gin.Logger())
 	router.GET(wv.GET_SLASH, answerClient)
@@ -65,18 +66,21 @@ func answerClient(c *gin.Context) {
 		log.Println(wv.INVALID_ENGINE)
 		os.Exit(wv.BaseIndex)
 	}
-	result, client := wotoDB.GenerateClient(wotoActions.SendSudo)
+	result, client := wotoDB.GenerateClient()
 	if result != common.SUCCESS {
 		log.Fatal(wv.WOTO_CLIENT_ERROR)
 	}
+
+	_settings.SetWClient(client)
 	go tickChecker()
 	wotoActions.RunBot(_settings, client)
 }
+
+// the tick checker for checking the authority of current engine.
 func tickChecker() {
-	const sleep = 10 * time.Second
 	_s := appSettings.GetExisting()
 	for {
-		time.Sleep(sleep)
+		time.Sleep(wv.TICK_INTERVAL)
 		if !wotoChilds.WObtainTC(_s) {
 			log.Fatal(wv.INVALID_ENGINE)
 		}

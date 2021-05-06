@@ -6,7 +6,7 @@
 package wotoActions
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -17,7 +17,7 @@ func shouldHangle(_update *tgbotapi.Update) bool {
 	return true
 }
 
-func HandleMessage(update *tgbotapi.Update, _settings *appSettings.AppSettings) {
+func HandleMessage(update *tgbotapi.Update, _settings interfaces.WSettings) {
 	switch getMessageType(update) {
 	case NONE:
 		return

@@ -9,6 +9,11 @@ package wotoValues
 const (
 	BaseIndex    = 0  // number 0
 	BaseOneIndex = 1  // number 1
+	BaseTwoIndex = 2  // number 2
+	Base8Bit     = 8  // number 8
+	Base16Bit    = 8  // number 8
+	Base32Bit    = 8  // number 32
+	Base64Bit    = 8  // number 32
 	BaseTimeOut  = 40 // 40 seconds
 )
 
@@ -19,6 +24,7 @@ const (
 	DotStr          = "." // dot : .
 	LineStr         = "-" // line : -
 	EMPTY           = ""  //an empty string.
+	UNDER           = "_" // an underscope
 )
 
 const SUDO int64 = 1341091260

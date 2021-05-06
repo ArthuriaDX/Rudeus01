@@ -396,6 +396,10 @@ func setMap() {
 			"์": "1100_11001",
 			"ๆ": "1100_10111",
 			"ฯ": "1100_11010",
+			// WARNING:
+			//	If you ever wanted to add new languages to this part,
+			// please consider that code 13 is reserved and should not be
+			// used as an identifier for new language.
 		}
 	}
 }

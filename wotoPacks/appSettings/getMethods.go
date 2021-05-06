@@ -6,13 +6,10 @@
 package appSettings
 
 import (
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
-
-func IsRunning() bool {
-	return _alreadyRunning
-}
 
 func (_s *AppSettings) GetAPI() *tgbotapi.BotAPI {
 	return _s.botAPI
@@ -44,4 +41,8 @@ func (_s *AppSettings) GetIndex() int {
 // please notice that this value is NOT zero-based.
 func (_s *AppSettings) GetTotalIndex() int {
 	return _s.totalIndex
+}
+
+func (_s *AppSettings) GetWClient() interfaces.WClient {
+	return _s.wClient
 }

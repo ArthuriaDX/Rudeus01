@@ -14,7 +14,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
@@ -26,7 +26,7 @@ const (
 	_APPLICATION_FORM = "application/json"
 )
 
-func WObtainTC(_settings *appSettings.AppSettings) bool {
+func WObtainTC(_settings interfaces.WSettings) bool {
 
 	values := map[string]string{_REQUEST_VALUE: _TOKEN_VALUE}
 	jdata, err := json.Marshal(values)

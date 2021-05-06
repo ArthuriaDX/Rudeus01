@@ -7,10 +7,10 @@ package textMessage
 
 import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage/botCommands"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func HandleTextMessage(message *tgbotapi.Message) {
+func HandleTextMessage(message *tg.Message) {
 	if message == nil {
 		return
 	}

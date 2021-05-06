@@ -15,7 +15,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_settings *appSettings.AppSettings, _client interfaces.WClient) {
+func RunBot(_settings interfaces.WSettings, _client interfaces.WClient) {
 	bot, err := tgbotapi.NewBotAPI(_settings.GetObt())
 	_settings.SetAPI(bot)
 	if err != nil {
@@ -32,7 +32,7 @@ func RunBot(_settings *appSettings.AppSettings, _client interfaces.WClient) {
 	}
 }
 
-func _runOnce(_bot *tgbotapi.BotAPI, _settings *appSettings.AppSettings) {
+func _runOnce(_bot *tgbotapi.BotAPI, _settings interfaces.WSettings) {
 	// Create a new UpdateConfig struct with an offset of 0. Offsets are used
 	// to make sure Telegram knows we've handled previous values and we don't
 	// need them repeated.

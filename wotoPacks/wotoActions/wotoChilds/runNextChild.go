@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
@@ -20,7 +20,7 @@ const (
 
 // RunNextChild will run the next child. please consider that the url
 // is the current child url, not the next one.
-func RunNextChild(url string, settings *appSettings.AppSettings) {
+func RunNextChild(url string, settings interfaces.WSettings) {
 	if ws.IsEmpty(&url) || settings == nil {
 		return
 	}

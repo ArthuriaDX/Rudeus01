@@ -5,6 +5,8 @@
 
 package wotoValues
 
+import "time"
+
 // router config values
 const (
 	APP_PORT     = "PORT"
@@ -13,3 +15,5 @@ const (
 	FORMAT_VALUE = "%"
 	SPACE_VALUE  = " "
 )
+
+const TICK_INTERVAL = 25 * time.Second // seconds

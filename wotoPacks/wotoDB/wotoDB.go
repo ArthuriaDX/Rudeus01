@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB/dbTypes"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
@@ -31,11 +32,10 @@ import (
 type WotoClient struct {
 	client          *mongo.Client
 	ctx             *context.Context
-	settings        *appSettings.AppSettings
+	settings        interfaces.WSettings
 	MainHostAddress string
 	DataBase1       dbTypes.DATABASE
 	ctxCancel       func()
-	SendSudo        func(string, *appSettings.AppSettings)
 }
 
 //opt             *options.ClientOptions
@@ -48,10 +48,8 @@ var _client *WotoClient
 
 // GenerateClient will generate a new data base client for you,
 // if and only if there is no client defined in the program.
-// NOTICE: in the new version, I added the defining of the
-// _wotoConfig in this function, so you don't need to use
-// WotoClient.GetWotoConfiguration() in the main() function
-func GenerateClient(_sendSudo func(string, *appSettings.AppSettings)) (wa.RESULT, *WotoClient) {
+// before calling this function, create a new settings in the app.
+func GenerateClient() (wa.RESULT, interfaces.WClient) {
 	if _client != nil {
 		return wa.SUCCESS, _client
 	}
@@ -59,7 +57,6 @@ func GenerateClient(_sendSudo func(string, *appSettings.AppSettings)) (wa.RESULT
 	_c._setHosts()
 	_c._setSettings()
 	_c._setClient()
-	_c.SendSudo = _sendSudo
 	_client = &_c
 	// uncomment this if and only if you need to create a new
 	// wotoConfiguration.
@@ -82,15 +79,14 @@ func clientError() {
 func (_c *WotoClient) PingClientDB(_report bool) {
 	s := time.Now()
 	_error := _c.client.Ping(*_c.ctx, nil)
-	_s := appSettings.GetExisting()
 	if _error != nil {
 		if _report {
-			_c.SendSudo("PING ERR"+_error.Error(), _s)
+			_c.settings.SendSudo("PING ERR" + _error.Error())
 		}
 		log.Fatal(_error)
 	} else {
 		pingTime := time.Since(s)
-		_c.SendSudo(pingTime.String(), _s)
+		_c.settings.SendSudo(pingTime.String())
 	}
 }
 

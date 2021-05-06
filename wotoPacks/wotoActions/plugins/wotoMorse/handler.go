@@ -11,6 +11,7 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -41,9 +42,13 @@ func ToMorse_handler(message *tg.Message, args pTools.Arg) {
 	var str string
 	if !ws.IsEmpty(&trl) {
 		if is_bin {
-			str = TO_BINARY_M + trl
+			md1 := wotoMD.GetBold(TO_BINARY_M)
+			md2 := wotoMD.GetNormal(trl)
+			str = md1.Append(md2).ToString()
 		} else {
-			str = TO_MORSE_M + trl
+			md1 := wotoMD.GetBold(TO_MORSE_M)
+			md2 := wotoMD.GetNormal(trl)
+			str = md1.Append(md2).ToString()
 		}
 	}
 	sendMorse(message, &str, is_reply, send_pv)
@@ -66,11 +71,17 @@ func FromMorse_handler(message *tg.Message, args pTools.Arg) {
 	trl := TranslateFromMorse(full)
 	var str string
 	if !ws.IsEmpty(&trl) {
-		str = FROM_MORSE_M + trl
+		md := wotoMD.GetBold(FROM_MORSE_M)
+		normal := wotoMD.GetNormal(trl)
+		str = md.Append(normal).ToString()
+		//str = wotoMD.GetBold(FROM_MORSE_M).ToString()
+		//str += wotoMD.GetNormal(trl).ToString()
 	}
 	sendMorse(message, &str, is_reply, send_pv)
 }
 
+// please before using this function, ensure that the `morse` value is
+// converted to markdown (using wotoMarkdown) functions.
 func sendMorse(message *tg.Message, morse *string, reply, pv bool) {
 	// always check before sending:
 	// Bad Request: message text is empty
@@ -110,9 +121,11 @@ func sendMorse(message *tg.Message, morse *string, reply, pv bool) {
 			msg.ReplyToMessageID = message.MessageID
 		}
 	}
-	//msg.ParseMode = tgbotapi.ModeMarkdownV2
+	msg.ParseMode = tg.ModeMarkdownV2
 	if _, err := api.Send(msg); err != nil {
+
 		log.Println(err)
+		settings.SendSudo(err.Error())
 		return
 	}
 }

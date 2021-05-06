@@ -6,8 +6,12 @@
 package wotoMorse
 
 import (
+	"strconv"
 	"strings"
 
+	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrong"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
@@ -28,7 +32,22 @@ func TranslateToBinary(text string) string {
 	textSlice := strings.Split(text, wv.EMPTY)
 
 	for _, char := range textSlice {
-		morseSequence += _alphabet[char] + wv.SPACE_VALUE
+		current := _alphabet[char]
+		// check if the current character does exist
+		// in our alphabet map or not.
+		if wotoStrings.IsEmpty(&current) {
+			// so, it seems it doesn't exist,
+			// but let's do a little dirty trick here.
+			for i, myChar := range char {
+				if i != wv.BaseIndex {
+					break
+				}
+				morseSequence += getSBinary(myChar) + wv.SPACE_VALUE
+			}
+
+		} else {
+			morseSequence += _alphabet[char] + wv.SPACE_VALUE
+		}
 	}
 
 	return morseSequence
@@ -44,8 +63,53 @@ func TranslateFromMorse(morseSequence string) string {
 	morseSlice := strings.Split(morseSequence, wv.SPACE_VALUE)
 
 	for _, char := range morseSlice {
-		trs += _reverseAlphabet[char]
+		current := _reverseAlphabet[char]
+		// check if the current character does exist
+		// in our alphabet map or not.
+		if wotoStrings.IsEmpty(&current) {
+			// so, it seems it doesn't exist,
+			// but let's do a little dirty trick here.
+			trs += getSMorse(char)
+		} else {
+			trs += _reverseAlphabet[char]
+		}
 	}
 
 	return trs
+}
+
+func getSBinary(r rune) string {
+	str := strconv.FormatInt(int64(r), wv.BaseTwoIndex)
+	off := strconv.FormatInt(wotoStrong.StrongOffSet, wv.BaseTwoIndex)
+	return off + wv.UNDER + str
+}
+
+func getSMorse(binary string) string {
+	if wotoStrings.IsEmpty(&binary) {
+		return wv.EMPTY
+	}
+	// separate the lang code and the original char
+	myStrings := strings.Split(binary, wv.UNDER)
+	// ensure that lang code and original character exist
+	if len(myStrings) != wv.BaseTwoIndex {
+		return wv.EMPTY
+	}
+	// we should ensure that the lang code is exatcly the
+	// same as our offset.
+	num, err := strconv.ParseInt(myStrings[wv.BaseIndex],
+		wv.BaseTwoIndex, wv.Base8Bit)
+	if err != nil || num != wotoStrong.StrongOffSet {
+		return wv.EMPTY
+	}
+
+	// now that everything is okay, we can convert the original
+	// value.
+	num, err = strconv.ParseInt(myStrings[wv.BaseOneIndex],
+		wv.BaseTwoIndex, wv.Base64Bit)
+	appSettings.GetExisting().SendSudo("HERE " + binary)
+	if err != nil {
+		return wv.EMPTY
+	}
+
+	return string(rune(num))
 }

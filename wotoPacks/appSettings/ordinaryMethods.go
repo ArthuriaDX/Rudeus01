@@ -30,14 +30,6 @@ func (_s *AppSettings) InvalidateAPI() bool {
 	}
 }
 
-func App_enter() {
-	_alreadyRunning = true
-}
-
-func App_exit() {
-	_alreadyRunning = false
-}
-
 func (_s *AppSettings) RunNext() {
 	if !ws.IsEmpty(&_s.nextUrl) {
 		go func() {
