@@ -172,6 +172,10 @@ func added_notice(message *tg.Message, id int64, pv bool) {
 		msg = tg.NewMessage(message.Chat.ID, str)
 	}
 
+	file := tg.FileID("AgACAgQAAx0CVMnYegACAgdgWv3UfYk5dEaNGwO-7WaVb1jT8gAC37QxG9UF2FIEse-qW8vbLRC2SSddAAMBAAMCAAN4AAPvlAYAAR4E")
+
+	ph := tg.NewPhoto(message.Chat.ID, file)
+	api.Send(ph)
 	// for fixing: Bad Request: replied message not found
 	if !pv {
 		msg.ReplyToMessageID = message.MessageID
