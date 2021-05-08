@@ -6,6 +6,7 @@
 package interfaces
 
 import (
+	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/gin-gonic/gin"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -26,12 +27,19 @@ type WSettings interface {
 	GetRouter() *gin.Engine
 	GetIndex() int
 	GetTotalIndex() int
+	GetSudoList() []int64
+	IsSudo(id int64) bool
+	IsMainSudo(id int64) bool
 	GetWClient() WClient
 	SetURL(_url string)
 	SetAPI(_api *tg.BotAPI)
 	SetObt(_obt func(WSettings) bool)
 	SetTObt(_obt string)
 	SetNextURL(_url string)
+	SetSudoList(dbValue string)
+	SetMainSudo(id int64)
+	AddSudo(id int64) wa.RESULT
+	RemSudo(id int64) wa.RESULT
 	SetIndex(_index int)
 	SendSudo(str string)
 	InvalidateAPI() bool

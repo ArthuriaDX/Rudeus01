@@ -57,14 +57,16 @@ func WObtainTC(_settings interfaces.WSettings) bool {
 
 	if err != nil {
 		// do NOT use fatal here, it will cuase trouble for bot
-		log.Println(_err)
+		log.Println(err)
+		return false
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
 		// do NOT use fatal here, it will cuase trouble for bot
-		log.Println(_err)
+		log.Println(err)
+		return false
 	}
 	str := string(body)
 	myInt, _err := strconv.Atoi(str)

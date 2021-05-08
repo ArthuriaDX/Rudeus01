@@ -1,23 +1,24 @@
 package interfaces
 
 import (
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
+	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB/dbTypes"
 )
 
 type WClient interface {
 	AccountsLength() int
 	PingClientDB(_report bool)
-	DeleteCollection(database dbTypes.DATABASE, collection dbTypes.COLLECTION) common.RESULT
+	DeleteCollection(database dbTypes.DATABASE, collection dbTypes.COLLECTION) wa.RESULT
 	Destroy()
-	GetWotoConfiguration() common.RESULT
-	ResetWotoConfiguration() common.RESULT
-	ResetUsersCollection() common.RESULT
-	CreateNewConfiguration() common.RESULT
-	UpdateLastUIDConfiguration(_index uint8) common.RESULT
-	CreateNewAccount() common.RESULT
-	FindAccount(_username, _pass *string) common.RESULT
-	DeleteAccount() common.RESULT
-	UpdateAccount() common.RESULT
-	UpdateAccountOnlineToken() common.RESULT
+	GetWotoConfiguration() wa.RESULT
+	ResetWotoConfiguration() wa.RESULT
+	ResetUsersCollection() wa.RESULT
+	CreateNewConfiguration() wa.RESULT
+	CreateNewAccount() wa.RESULT
+	AddSudo(id int64) wa.RESULT
+	RemSudo(id int64) wa.RESULT
+	FindAccount(_username, _pass *string) wa.RESULT
+	DeleteAccount() wa.RESULT
+	UpdateAccount() wa.RESULT
+	UpdateAccountOnlineToken() wa.RESULT
 }

@@ -6,7 +6,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -24,16 +23,29 @@ import (
 )
 
 func main() {
-	resp, err1 := http.Get("https://api.urbandictionary.com/v0/define?term=mamad")
-	if err1 != nil {
-		log.Fatal(err1)
-	}
+	//resp, err := http.Get("https://api.gnuweeb.org/google_translate.php?fr=en&to=ja&text=Good+Morning")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//defer resp.Body.Close()
+	//body10, err := ioutil.ReadAll(resp.Body)
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//log.Fatal(string(body10))
 
-	str, err2 := ioutil.ReadAll(resp.Body)
-	if err2 != nil {
-		log.Fatal(err2)
-	}
-	log.Println(string(str))
+	// https://api.gnuweeb.org/google_translate.php?fr=en&to=ja&text=Good+Morning
+	//resp, err1 := http.Get("https://api.urbandictionary.com/v0/define?term=mamad")
+	//resp, err1 := http.Get("https://api.gnuweeb.org/google_translate.php?fr=en&to=ja&text=Good+Morning")
+	//if err1 != nil {
+	//	log.Fatal(err1)
+	//}
+
+	//str, err2 := ioutil.ReadAll(resp.Body)
+	//if err2 != nil {
+	//	log.Fatal(err2)
+	//}
+	//log.Println(string(str))
 
 	port := os.Getenv(wv.APP_PORT)
 	if ws.IsEmpty(&port) {
@@ -52,6 +64,7 @@ func runApp(_settings interfaces.WSettings) {
 
 func answerClient(c *gin.Context) {
 	if !appSettings.IsRunning() {
+		go c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.BaseTen)
 		appSettings.App_enter()
 	} else {
 		_s := appSettings.GetExisting()
@@ -78,7 +91,7 @@ func answerClient(c *gin.Context) {
 		log.Println(wv.INVALID_ENGINE)
 		os.Exit(wv.BaseIndex)
 	}
-	result, client := wotoDB.GenerateClient()
+	result, client := wotoDB.GenerateClient(1)
 	if result != common.SUCCESS {
 		log.Fatal(wv.WOTO_CLIENT_ERROR)
 	}

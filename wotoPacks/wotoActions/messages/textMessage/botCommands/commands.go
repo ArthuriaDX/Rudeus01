@@ -23,20 +23,20 @@ func IsCommand(_text *string) bool {
 // isCommand1 will check if the _text
 // has first prefex or not.
 func isCommand1(_text *string) bool {
-	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFEX1)
+	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFIX1)
 }
 
 // isCommand2 will check if the _text
 // has first prefex or not.
 func isCommand2(_text *string) bool {
-	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFEX2)
+	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFIX2)
 }
 
 func HandleCommand(message *tgbotapi.Message) {
 	cmdListInit()
 	text := strings.ToLower(message.Text)
-	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFEX1)
-	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFEX2)
+	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFIX1)
+	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFIX2)
 	texts := strings.Split(text, wotoValues.SPACE_VALUE)
 	//log.Println("before event : ", texts)
 	//log.Println(texts[wotoValues.BaseIndex])

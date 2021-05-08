@@ -7,8 +7,8 @@ package wotoValues
 
 // the prefex values for commands.
 const (
-	COMMAND_PREFEX1 = "!"
-	COMMAND_PREFEX2 = "/"
-	SUDO_PREFEX1    = ">"
-	FLAG_PREFEX     = "--"
+	COMMAND_PREFIX1 = "!"
+	COMMAND_PREFIX2 = "/"
+	SUDO_PREFIX1    = ">"
+	FLAG_PREFIX     = "--"
 )

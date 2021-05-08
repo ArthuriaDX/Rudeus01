@@ -1,3 +1,10 @@
+<!--
+	Rudeus Telegram Bot Project
+	Copyright (C) 2021 wotoTeam, ALiwoto
+	This file is subject to the terms and conditions defined in
+	file 'LICENSE', which is part of the source code.
+-->
+
 # <h1 align="middle">📊 wotoMorse plugin 📊 <img src="https://raw.githubusercontent.com/aliwoto/aliwoto/main/resources/kyubey.gif" width="55px">
 > Name:		wotoMorse			\ 
 > Version:	v1.1.56				\

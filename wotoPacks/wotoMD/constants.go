@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoMD
 
 const (
@@ -23,6 +28,9 @@ const (
 	CHAR_S16 = '`'
 	CHAR_S17 = '.'
 	CHAR_S18 = '='
+	CHAR_S19 = '>'
+	CHAR_S20 = '<'
+	CHAR_S21 = '~'
 )
 
 var _sChars = []rune{
@@ -44,4 +52,7 @@ var _sChars = []rune{
 	CHAR_S16,
 	CHAR_S17,
 	CHAR_S18,
+	CHAR_S19,
+	CHAR_S20,
+	CHAR_S21,
 }

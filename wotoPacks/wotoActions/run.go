@@ -8,7 +8,6 @@ package wotoActions
 import (
 	"log"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 
@@ -54,24 +53,5 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings interfaces.WSettings) {
 			continue
 		}
 		go HandleMessage(&update, _settings)
-	}
-}
-
-// SendSudo, will send a message to the superuser of the bot.
-func SendSudo(str string, _settings *appSettings.AppSettings) {
-	// Now that we know we've gotten a new message, we can construct a
-	// reply! We'll take the Chat ID and Text from the incoming message
-	// and use it to create a new message. 1341091260
-	msg := tgbotapi.NewMessage(1341091260, str)
-
-	// We'll also say that this message is a reply to the previous message.
-	// For any other specifications than Chat ID or Text, you'll need to
-	// set fields on the `MessageConfig`.
-	if _, err := _settings.GetAPI().Send(msg); err != nil {
-		// Note that panics are a bad way to handle errors. Telegram can
-		// have service outages or network errors, you should retry sending
-		// messages or more gracefully handle failures.
-		log.Println(err)
-		return
 	}
 }

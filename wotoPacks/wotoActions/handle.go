@@ -8,17 +8,29 @@ package wotoActions
 import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/messages/textMessage"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
+
+var updatesMap map[int]bool
 
 // shouldHangle will check if you should handle the
 // update or not.
-func shouldHangle(_update *tgbotapi.Update) bool {
+func shouldHangle(_update *tg.Update) bool {
+	if updatesMap == nil {
+		updatesMap = make(map[int]bool)
+	}
+
+	if !updatesMap[_update.UpdateID] {
+		updatesMap[_update.UpdateID] = true
+	} else {
+		return false
+	}
 
 	return true
 }
 
-func HandleMessage(update *tgbotapi.Update, _settings interfaces.WSettings) {
+// HandleMessage will handle the update comming from the telegram servers.
+func HandleMessage(update *tg.Update, _settings interfaces.WSettings) {
 	if update.CallbackQuery != nil {
 		_settings.SendSudo(update.CallbackQuery.Data)
 	}
@@ -26,7 +38,6 @@ func HandleMessage(update *tgbotapi.Update, _settings interfaces.WSettings) {
 	case NONE:
 		return
 	case TEXT_MESSAGE:
-		//log.Println("in TEXT switch! "+update.Message.Text, _settings)
 		textMessage.HandleTextMessage(update.Message)
 	default:
 		return

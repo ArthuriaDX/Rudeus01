@@ -5,10 +5,13 @@
 
 package botCommands
 
-// sudo commands
+// non-sudo commands
 const (
-	TMORSe_CMD = "tmorse"
-	FMORSE_CMD = "fmorse"
+	TMORSe_CMD    = "tmorse"
+	FMORSE_CMD    = "fmorse"
+	TR_CMD        = "tr"
+	TL_CMD        = "tl"
+	TRANSLATE_CMD = "translate"
 )
 
 var cmdList map[string]CmdHandler
@@ -29,6 +32,13 @@ func add_morseCmdList() {
 		}
 		if cmdList[FMORSE_CMD] == nil {
 			cmdList[FMORSE_CMD] = fromMorse_handler
+		}
+
+		if cmdList[TR_CMD] == nil {
+			cmdList[TR_CMD] = fromMorse_handler
+		}
+		if cmdList[TR_CMD] == nil {
+			cmdList[TRANSLATE_CMD] = fromMorse_handler
 		}
 	}
 }

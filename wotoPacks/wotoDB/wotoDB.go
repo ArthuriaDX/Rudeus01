@@ -15,6 +15,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
@@ -23,7 +24,6 @@ import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB/dbTypes"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -38,26 +38,38 @@ type WotoClient struct {
 	ctxCancel       func()
 }
 
-//opt             *options.ClientOptions
-
-// EMPTY is an empty string which is used in many many parts of the program :|
-const EMPTY string = ""
-
-// the _client of the woto data base package
-var _client *WotoClient
+// the map for clients present in the app.
+var clientsMap map[int]interfaces.WClient
 
 // GenerateClient will generate a new data base client for you,
 // if and only if there is no client defined in the program.
 // before calling this function, create a new settings in the app.
-func GenerateClient() (wa.RESULT, interfaces.WClient) {
-	if _client != nil {
-		return wa.SUCCESS, _client
+func GenerateClient(index int) (wa.RESULT, interfaces.WClient) {
+	if index < wotoValues.BaseIndex {
+		return wa.CANCELED, nil
 	}
+
+	if clientsMap == nil {
+		clientsMap = make(map[int]interfaces.WClient)
+	}
+	if clientsMap[index] != nil {
+		return wa.SUCCESS, clientsMap[index]
+	}
+
 	_c := WotoClient{client: nil}
-	_c._setHosts()
+
+	_c._setHosts(strconv.Itoa(index))
+
 	_c._setSettings()
+
 	_c._setClient()
-	_client = &_c
+
+	re := _c.GetWotoConfiguration()
+	if re != wa.SUCCESS {
+		return re, nil
+	}
+
+	clientsMap[index] = &_c
 	// uncomment this if and only if you need to create a new
 	// wotoConfiguration.
 	//_client.CreateNewConfiguration()
@@ -67,13 +79,14 @@ func GenerateClient() (wa.RESULT, interfaces.WClient) {
 	//	}
 	//	return _result
 	//}
-	return wa.SUCCESS, _client
+	return wa.SUCCESS, clientsMap[index]
 }
 
 // clientError function will trigger an error and close the
 // program asap!
-func clientError() {
-	log.Fatal("\nUnknown Error in woto data base!")
+func clientError(err error) {
+	settings := appSettings.GetExisting()
+	settings.SendSudo(err.Error())
 }
 
 func (_c *WotoClient) PingClientDB(_report bool) {
@@ -108,13 +121,11 @@ func (_c *WotoClient) _setClient() {
 	clientOptions := options.Client().ApplyURI(_c.MainHostAddress)
 	client, _err := mongo.NewClient(clientOptions)
 	if _err != nil {
-		log.Fatal(_err)
+		log.Println(_err)
+		clientError(_err)
 		return
 	}
-	if client == nil {
-		clientError()
-		return
-	}
+
 	_c.client = client
 	_err = _c.client.Connect(ctx)
 	if _err != nil {
@@ -130,10 +141,10 @@ func (_c *WotoClient) _setSettings() {
 	_c.settings = _s
 }
 
-func (_c *WotoClient) _setHosts() {
-	_s := os.Getenv(wotoValues.HOST_ADDRESS1_KEY)
+func (_c *WotoClient) _setHosts(index string) {
+	_s := os.Getenv(wotoValues.HOST_ADDRESS_KEY + index)
 	if wotoStrings.IsEmpty(&_s) {
-		log.Fatal(wotoValues.HOST_ADDRESS_NOTSET)
+		log.Fatal(wotoValues.HOST_ADDRESS_NOTSET + index)
 	}
 	_c.MainHostAddress = _s
 
@@ -176,46 +187,11 @@ func (_c *WotoClient) DeleteCollection(database dbTypes.DATABASE,
 	return wa.SUCCESS
 }
 
-// getRAWS will give you the raw data.
-func (_c *WotoClient) getRAWS(database dbTypes.DATABASE, collection dbTypes.COLLECTION) (wa.RESULT, []bson.M) {
-	_collection := _c.getCollection(database, collection)
-	if _collection == nil {
-		clientError()
-		return wa.FAILED, nil
-	}
-	_cursor, _cursorError := _collection.Find(*_c.ctx, bson.M{})
-	if _cursorError != nil || _cursor == nil {
-		return wa.FAILED, nil
-	}
-	var _raws []bson.M
-	_ = _cursor.All(*_c.ctx, &_raws)
-	return wa.SUCCESS, _raws
-}
-
 func (_c *WotoClient) Destroy() {
 	_c.ctxCancel()
 
 }
-func (_c *WotoClient) GetWotoConfiguration() wa.RESULT {
-	//_w := wotoConfiguration{
-	//	UIDKeyName: [MaxUIDIndex]string{},
-	//	LastUID:    [MaxUIDIndex]UID{},
-	//}
-	//_re, _raws := _c.getRAWS(MainDataBase, ConfigurationCollection)
-	//if _re != SUCCESS {
-	//	return FAILED, nil
-	//}
-	//_w.setUIDKeys()
-	//for _i, _current := range _raws {
-	//	_value, _ok := _current[UIDKeyName].(string)
-	//	_w.LastUID[_i] = UID(_value)
-	//	if !_ok {
-	//		clientError()
-	//		return FAILED, nil
-	//	}
-	//}
-	return wa.SUCCESS
-}
+
 func (_c *WotoClient) ResetWotoConfiguration() wa.RESULT {
 	//_collection := _c.getCollection(MainDataBase, ConfigurationCollection)
 	//_err := _collection.Drop(*_c.ctx)
@@ -230,6 +206,7 @@ func (_c *WotoClient) ResetWotoConfiguration() wa.RESULT {
 	//}
 	return _c.GetWotoConfiguration()
 }
+
 func (_c *WotoClient) ResetUsersCollection() wa.RESULT {
 	_collection := _c.getCollection(MainDataBase, UsersCollection)
 	_err := _collection.Drop(*_c.ctx)
@@ -238,49 +215,34 @@ func (_c *WotoClient) ResetUsersCollection() wa.RESULT {
 	}
 	return wa.SUCCESS
 }
-func (_c *WotoClient) CreateNewConfiguration() wa.RESULT {
-	//_w := getNewWotoConfiguration()
-	//_collection := _c.getCollection(MainDataBase, ConfigurationCollection)
 
-	//var _b bson.D
-	//for i := BaseUIDIndex - UIDIndexOffSet; i <= MaxUIDIndex-UIDIndexOffSet; i++ {
-	//	_b = bson.D{
-	//		{UIDIndexValue, _w.UIDKeyName[i]},
-	//		{UIDKeyName, _w.LastUID[i]},
-	//	}
-	//	_R, _err := _collection.InsertOne(*_c.ctx, _b)
-	//	if _R == nil || _err != nil {
-	//		return FAILED
-	//	}
-	//}
-	return wa.SUCCESS
-}
-func (_c *WotoClient) UpdateLastUIDConfiguration(_index uint8) wa.RESULT {
-	//_collection := _c.getCollection(MainDataBase, ConfigurationCollection)
-	//if _collection == nil {
-	//	return FAILED
-	//}
-	//_cursor, _cursorError := _collection.Find(*_c.ctx, bson.M{})
-	//if _cursorError != nil || _cursor == nil {
-	//	return FAILED
-	//}
-	//_i := _index - UIDIndexOffSet
-	// _b := bson.D{
-	// {SetValue, bson.D{
-	// {UIDIndexValue, _w.UIDKeyName[_i]},
-	// {UIDKeyName, _w.LastUID[_i]},
-	// }},
-	// }
-	// var _raws []bson.M
-	// _ = _cursor.All(*_c.ctx, &_raws)
-	//_current := _raws[_i]
-	//_re, _err := _collection.UpdateOne(*_c.ctx, _current, _b)
-	//if _re == nil || _err != nil {
-	//	panic(_err)
-	//	return FAILED
-	//}
-	return wa.SUCCESS
-}
+//func (_c *WotoClient) UpdateLastUIDConfiguration(_index uint8) wa.RESULT {
+//_collection := _c.getCollection(MainDataBase, ConfigurationCollection)
+//if _collection == nil {
+//	return FAILED
+//}
+//_cursor, _cursorError := _collection.Find(*_c.ctx, bson.M{})
+//if _cursorError != nil || _cursor == nil {
+//	return FAILED
+//}
+//_i := _index - UIDIndexOffSet
+// _b := bson.D{
+// {SetValue, bson.D{
+// {UIDIndexValue, _w.UIDKeyName[_i]},
+// {UIDKeyName, _w.LastUID[_i]},
+// }},
+// }
+// var _raws []bson.M
+// _ = _cursor.All(*_c.ctx, &_raws)
+//_current := _raws[_i]
+//_re, _err := _collection.UpdateOne(*_c.ctx, _current, _b)
+//if _re == nil || _err != nil {
+//	panic(_err)
+//	return FAILED
+//}
+//	return wa.SUCCESS
+//}
+
 func (_c *WotoClient) CreateNewAccount() wa.RESULT {
 	//_collection := _c.getCollection(MainDataBase, UsersCollection)
 	//_R, _ := _collection.InsertOne(*_c.ctx, _a.getForServer())
@@ -289,6 +251,7 @@ func (_c *WotoClient) CreateNewAccount() wa.RESULT {
 	//}
 	return wa.FAILED
 }
+
 func (_c *WotoClient) AccountsLength() int {
 	_r, _raws := _c.getRAWS(MainDataBase, UsersCollection)
 	if _r != wa.SUCCESS {
@@ -296,6 +259,7 @@ func (_c *WotoClient) AccountsLength() int {
 	}
 	return len(_raws)
 }
+
 func (_c *WotoClient) FindAccount(_username, _pass *string) wa.RESULT {
 	//if isEmpty(_username) {
 	//	return FAILED, nil
@@ -321,6 +285,7 @@ func (_c *WotoClient) FindAccount(_username, _pass *string) wa.RESULT {
 	//}
 	return wa.FAILED
 }
+
 func (_c *WotoClient) DeleteAccount() wa.RESULT {
 	//_collection := _c.getCollection(MainDataBase, UsersCollection)
 	//if _collection == nil {
@@ -345,6 +310,7 @@ func (_c *WotoClient) DeleteAccount() wa.RESULT {
 	//}
 	return wa.FAILED
 }
+
 func (_c *WotoClient) UpdateAccount() wa.RESULT {
 	//_collection := _c.getCollection(MainDataBase, UsersCollection)
 	//if _collection == nil {
@@ -370,6 +336,7 @@ func (_c *WotoClient) UpdateAccount() wa.RESULT {
 	//}
 	return wa.FAILED
 }
+
 func (_c *WotoClient) UpdateAccountOnlineToken() wa.RESULT {
 	//_collection := _c.getCollection(MainDataBase, OnlineTokenCollection)
 	//if _collection == nil {

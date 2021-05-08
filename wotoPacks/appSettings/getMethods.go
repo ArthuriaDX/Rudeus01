@@ -7,6 +7,7 @@ package appSettings
 
 import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -45,4 +46,29 @@ func (_s *AppSettings) GetTotalIndex() int {
 
 func (_s *AppSettings) GetWClient() interfaces.WClient {
 	return _s.wClient
+}
+
+func (_s *AppSettings) GetSudoList() []int64 {
+	return _s.sudoList
+}
+
+func (_s *AppSettings) IsSudo(id int64) bool {
+	if _s.sudoList == nil {
+		return false
+	}
+
+	for _, current := range _s.sudoList {
+		if id == current {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (_s *AppSettings) IsMainSudo(id int64) bool {
+	if _s.mainSudo == wotoValues.BaseIndex {
+		return false
+	}
+	return _s.mainSudo == id
 }

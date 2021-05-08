@@ -1,10 +1,15 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package tgConst
 
 import (
 	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -17,7 +22,7 @@ const (
 )
 
 func ReplaceDyn(value *string, msg *tg.Message) {
-	if wotoStrings.IsEmpty(value) || msg == nil {
+	if ws.IsEmpty(value) || msg == nil {
 		return
 	}
 	*value = wotoMD.GetNormal(*value).ToString()
@@ -56,7 +61,6 @@ func ReplaceDyn(value *string, msg *tg.Message) {
 		tmp = strings.ReplaceAll(*value, md, tmp)
 		*value = tmp
 	}
-	//appSettings.GetExisting().SendSudo(*value)
 }
 
 func ReplaceDynBot(value *string, api *tg.BotAPI) {
@@ -65,5 +69,20 @@ func ReplaceDynBot(value *string, api *tg.BotAPI) {
 	if strings.Contains(*value, BOT_USERNAME) {
 		tmp = strings.ReplaceAll(*value, BOT_USERNAME, api.Self.UserName)
 		*value = tmp
+	}
+}
+
+func ReplaceFirstNameMention(v *string, firstName string, id int64) {
+	*v = wotoMD.GetNormal(*v).ToString()
+	var tmp, md string
+
+	md = wotoMD.GetNormal(FIRST_NAME_MENTION).ToString()
+	if strings.Contains(*v, md) {
+		// id doesn't need to be repaired at all,
+		// also firstName will be repaired inside of the
+		// function, so there is no need to repair it.
+		tmp = wotoMD.GetUserMention(firstName, id).ToString()
+		tmp = strings.ReplaceAll(*v, md, tmp)
+		*v = tmp
 	}
 }

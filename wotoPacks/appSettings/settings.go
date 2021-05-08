@@ -22,6 +22,8 @@ type AppSettings struct {
 	port       string
 	url        string
 	nextUrl    string
+	sudoList   []int64
+	mainSudo   int64
 	wClient    interfaces.WClient
 	router     *gin.Engine
 	botAPI     *tgbotapi.BotAPI

@@ -12,8 +12,9 @@ const (
 	APP_PORT     = "PORT"
 	GET_SLASH    = "/"
 	HTTP_ADDRESS = ":"
-	FORMAT_VALUE = "%"
+	FORMAT_VALUE = "%v"
 	SPACE_VALUE  = " "
+	SEMICOLON    = ";"
 )
 
 const TICK_INTERVAL = 25 * time.Second // seconds

@@ -13,16 +13,16 @@ import (
 )
 
 func IsSudoCommand(_text *string) bool {
-	return strings.HasPrefix(*_text, wotoValues.SUDO_PREFEX1)
+	return strings.HasPrefix(*_text, wotoValues.SUDO_PREFIX1)
 }
 
 func HandleSudoCommand(message *tgbotapi.Message) {
 	sudoListInit()
 	text := strings.ToLower(message.Text)
-	text = strings.TrimPrefix(text, wotoValues.SUDO_PREFEX1)
+	text = strings.TrimPrefix(text, wotoValues.SUDO_PREFIX1)
 	text = strings.TrimPrefix(text, wotoValues.SPACE_VALUE)
 	texts := strings.Split(text, wotoValues.SPACE_VALUE)
-	//log.Println("before event : ", texts)
+
 	event := sudoCMDList[texts[wotoValues.BaseIndex]]
 	if event != nil {
 		event(message, texts)
