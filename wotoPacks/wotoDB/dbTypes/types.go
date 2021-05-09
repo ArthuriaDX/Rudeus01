@@ -8,3 +8,6 @@ package dbTypes
 // the DATABASE type
 type DATABASE string
 type COLLECTION string
+
+// the index of the db client.
+type DB_INDEX uint8

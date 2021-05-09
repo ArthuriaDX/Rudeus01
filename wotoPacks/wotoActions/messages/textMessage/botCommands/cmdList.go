@@ -7,11 +7,13 @@ package botCommands
 
 // non-sudo commands
 const (
-	TMORSe_CMD    = "tmorse"
-	FMORSE_CMD    = "fmorse"
-	TR_CMD        = "tr"
-	TL_CMD        = "tl"
-	TRANSLATE_CMD = "translate"
+	TMORSe_CMD    = "tmorse"    // wotoMorse plugin
+	FMORSE_CMD    = "fmorse"    // wotoMorse plugin
+	TR_CMD        = "tr"        // wotoTranslate plugin
+	TL_CMD        = "tl"        // wotoTranslate plugin
+	TRANSLATE_CMD = "translate" // wotoTranslate plugin
+	PAT_CMD       = "pat"       // wotoPat plugin
+	PATTU_CMD     = "pattu"     // wotoPat plugin
 )
 
 var cmdList map[string]CmdHandler
@@ -37,8 +39,15 @@ func add_morseCmdList() {
 		if cmdList[TR_CMD] == nil {
 			cmdList[TR_CMD] = fromMorse_handler
 		}
-		if cmdList[TR_CMD] == nil {
+		if cmdList[TRANSLATE_CMD] == nil {
 			cmdList[TRANSLATE_CMD] = fromMorse_handler
+		}
+
+		if cmdList[PAT_CMD] == nil {
+			cmdList[PAT_CMD] = pat_handler
+		}
+		if cmdList[PATTU_CMD] == nil {
+			cmdList[PATTU_CMD] = pat_handler
 		}
 	}
 }

@@ -7,15 +7,20 @@ package botCommands
 
 import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoPat"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoSudo"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoTest"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func testCommandHandle(message *tg.Message, args pTools.Arg) {
+func testCommandHandler(message *tg.Message, args pTools.Arg) {
 	wotoTest.TestCommandHandle(message, args)
 }
 
-func sudoCommandHandle(message *tg.Message, args pTools.Arg) {
+func sudoCommandHandler(message *tg.Message, args pTools.Arg) {
 	wotoSudo.Sudo_handler(message, args)
+}
+
+func patCommandHandler(message *tg.Message, args pTools.Arg) {
+	wotoPat.PatS_Handler(message, args)
 }

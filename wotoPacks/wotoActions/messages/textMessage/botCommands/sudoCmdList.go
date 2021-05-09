@@ -14,6 +14,7 @@ import (
 const (
 	TEST_SUDO_CMD = "test"
 	SUDO_SUDO_CMD = "sudo"
+	PAT_SUDO_CMD  = "pat"
 )
 
 var sudoCMDList map[string]func(*tg.Message, pTools.Arg)
@@ -26,12 +27,13 @@ func sudoListInit() {
 	sudoCMDList = make(map[string]func(*tg.Message, pTools.Arg))
 	add_testSudoCMD()
 	add_sudoSudoCMD()
+	add_patSudoCMD()
 }
 
 func add_testSudoCMD() {
 	if sudoCMDList != nil {
 		if sudoCMDList[TEST_SUDO_CMD] == nil {
-			sudoCMDList[TEST_SUDO_CMD] = testCommandHandle
+			sudoCMDList[TEST_SUDO_CMD] = testCommandHandler
 		}
 	}
 }
@@ -39,7 +41,15 @@ func add_testSudoCMD() {
 func add_sudoSudoCMD() {
 	if sudoCMDList != nil {
 		if sudoCMDList[SUDO_SUDO_CMD] == nil {
-			sudoCMDList[SUDO_SUDO_CMD] = sudoCommandHandle
+			sudoCMDList[SUDO_SUDO_CMD] = sudoCommandHandler
+		}
+	}
+}
+
+func add_patSudoCMD() {
+	if sudoCMDList != nil {
+		if sudoCMDList[PAT_SUDO_CMD] == nil {
+			sudoCMDList[PAT_SUDO_CMD] = patCommandHandler
 		}
 	}
 }

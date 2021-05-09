@@ -25,6 +25,7 @@ type AppSettings struct {
 	sudoList   []int64
 	mainSudo   int64
 	wClient    interfaces.WClient
+	patClient  interfaces.WClient
 	router     *gin.Engine
 	botAPI     *tgbotapi.BotAPI
 	_apiObtain func(interfaces.WSettings) bool

@@ -11,25 +11,25 @@ import (
 	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB/dbTypes"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 func (_c *WotoClient) GetWotoConfiguration() wa.RESULT {
 	re, raws := _c.getRAWS(MainDataBase, ConfigurationCollection)
 	if re != wa.SUCCESS {
-		log.Println("Couldn't get raw in GetWotoConfiguration method!")
+		log.Println(wv.GET_WCONFIG_ERROR)
 		return wa.FAILED
 	}
 
-	mainSudo := raws[wotoValues.BaseIndex][MAIN_SUDO_KEY].(int64)
-	if mainSudo == wotoValues.BaseIndex {
-		log.Println("Tried to get main sudo id from db, but it is zero!")
+	mainSudo := raws[wv.BaseIndex][MAIN_SUDO_KEY].(int64)
+	if mainSudo == wv.BaseIndex {
+		log.Println(wv.GET_MAIN_SUDO_ERROR)
 	}
 
-	sudoL := raws[wotoValues.BaseIndex][SUDO_LIST_KEY].(string)
+	sudoL := raws[wv.BaseIndex][SUDO_LIST_KEY].(string)
 	if ws.IsEmpty(&sudoL) {
-		log.Println("Tried to get sudo list from db, but it's Empty!")
+		log.Println(wv.GET_SUDO_LIST_ERROR)
 	}
 
 	_c.settings.SetMainSudo(mainSudo)
@@ -71,13 +71,19 @@ func (_c *WotoClient) getRAWS(database dbTypes.DATABASE, collection dbTypes.COLL
 		// clientError()
 		// well, it seems it's really rare to reach this poit,
 		// but I will note this so do something about it in the future.
+		log.Println("collection nil in getRAWS")
 		return wa.FAILED, nil
 	}
 	_cursor, _cursorError := _collection.Find(*_c.ctx, bson.M{})
 	if _cursorError != nil || _cursor == nil {
+		log.Println(_cursorError)
 		return wa.FAILED, nil
 	}
 	var _raws []bson.M
 	_ = _cursor.All(*_c.ctx, &_raws)
 	return wa.SUCCESS, _raws
+}
+
+func (_c *WotoClient) isPatClient() bool {
+	return _c.index == PAT_CLIENT
 }

@@ -21,10 +21,16 @@ const (
 	FIRST_NAME_MENTION = "$WOTO_FIRSTNAME_MENTION"
 )
 
+// ReplaceDynBot will replace the message info with
+// `msg` parameter dynamically.
+// please ensure that `value` is not nil!
+// no need to use wotoMd.GetNormal(), we will do it in
+// this function.
 func ReplaceDyn(value *string, msg *tg.Message) {
 	if ws.IsEmpty(value) || msg == nil {
 		return
 	}
+
 	*value = wotoMD.GetNormal(*value).ToString()
 	var tmp, md, userMd string
 
@@ -63,7 +69,16 @@ func ReplaceDyn(value *string, msg *tg.Message) {
 	}
 }
 
+// ReplaceDynBot will replace the bot info with
+// `api` dynamically.
+// please ensure that `v` is not nil!
+// no need to use wotoMd.GetNormal(), we will do it in
+// this function.
 func ReplaceDynBot(value *string, api *tg.BotAPI) {
+	if ws.IsEmpty(value) || api == nil {
+		return
+	}
+
 	var tmp string
 
 	if strings.Contains(*value, BOT_USERNAME) {
@@ -72,7 +87,16 @@ func ReplaceDynBot(value *string, api *tg.BotAPI) {
 	}
 }
 
+// ReplaceFirstNameMention will replace the firstname
+// dynamically, using `firstname` value in `*v`.
+// please ensure that `v` is not nil!
+// no need to use wotoMd.GetNormal(), we will do it in
+// this function.
 func ReplaceFirstNameMention(v *string, firstName string, id int64) {
+	if ws.IsEmpty(v) || ws.IsEmpty(&firstName) {
+		return
+	}
+
 	*v = wotoMD.GetNormal(*v).ToString()
 	var tmp, md string
 

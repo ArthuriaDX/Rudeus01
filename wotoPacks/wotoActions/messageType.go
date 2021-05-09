@@ -14,9 +14,10 @@ import (
 type MessageType uint8
 
 const (
-	NONE                     = 0
-	TEXT_MESSAGE MessageType = 1
-	GIF_MESSAGE  MessageType = 2
+	NONE                      = 0
+	TEXT_MESSAGE  MessageType = 1
+	GIF_MESSAGE   MessageType = 2
+	PHOTO_MESSAGE MessageType = 3
 )
 
 func getMessageType(_update *tg.Update) MessageType {
@@ -26,6 +27,10 @@ func getMessageType(_update *tg.Update) MessageType {
 
 	if _checkGifMessage(_update) {
 		return GIF_MESSAGE
+	}
+
+	if _checkPhotoMessage(_update) {
+		return PHOTO_MESSAGE
 	}
 
 	return NONE
@@ -72,10 +77,56 @@ func _checkTextMessage(_update *tg.Update) bool {
 	if _msg.Audio != nil {
 		return false
 	}
+
 	return true
 }
 
 func _checkGifMessage(_update *tg.Update) bool {
 
 	return false
+}
+
+func _checkPhotoMessage(_update *tg.Update) bool {
+	_msg := _update.Message
+	if _msg == nil {
+		return false
+	}
+	if _msg.MessageID == wv.BaseIndex {
+		return false
+	}
+	//if _msg.From == nil {
+	//	return false
+	//}
+	if _msg.Chat == nil {
+		return false
+	}
+	if _msg.Date == wv.BaseIndex {
+		return false
+	}
+	if ws.IsEmpty(&_msg.Text) {
+		return false
+	}
+	if _msg.Animation != nil {
+		return false
+	}
+	if _msg.Document != nil {
+		return false
+	}
+	if !ws.IsEmpty(&_msg.Caption) {
+		return false
+	}
+	if _msg.Photo != nil {
+		return false
+	}
+	if _msg.Video != nil {
+		return false
+	}
+	if _msg.Game != nil {
+		return false
+	}
+	if _msg.Audio != nil {
+		return false
+	}
+
+	return true
 }

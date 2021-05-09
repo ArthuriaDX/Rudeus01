@@ -31,6 +31,7 @@ type WSettings interface {
 	IsSudo(id int64) bool
 	IsMainSudo(id int64) bool
 	GetWClient() WClient
+	GetPatClient() WClient
 	SetURL(_url string)
 	SetAPI(_api *tg.BotAPI)
 	SetObt(_obt func(WSettings) bool)
@@ -45,4 +46,5 @@ type WSettings interface {
 	InvalidateAPI() bool
 	SetNextChild(_nextRunner func(string, WSettings))
 	SetWClient(_client WClient)
+	SetPatClient(client WClient)
 }

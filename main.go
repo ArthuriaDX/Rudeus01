@@ -14,7 +14,6 @@ import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoChilds"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
@@ -91,14 +90,16 @@ func answerClient(c *gin.Context) {
 		log.Println(wv.INVALID_ENGINE)
 		os.Exit(wv.BaseIndex)
 	}
-	result, client := wotoDB.GenerateClient(1)
-	if result != common.SUCCESS {
-		log.Fatal(wv.WOTO_CLIENT_ERROR)
-	}
 
-	_settings.SetWClient(client)
+	wotoDB.GenerateClients(_settings)
+	//result, client := wotoDB.GenerateClient(1)
+	//if result != common.SUCCESS {
+	//	log.Fatal(wv.WOTO_CLIENT_ERROR)
+	//}
+
+	//_settings.SetWClient(client)
 	go tickChecker()
-	wotoActions.RunBot(_settings, client)
+	wotoActions.RunBot(_settings)
 }
 
 // the tick checker for checking the authority of current engine.

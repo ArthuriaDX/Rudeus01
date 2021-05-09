@@ -23,50 +23,65 @@ import (
 	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB/dbTypes"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // the WotoClient struct which will act as a client in the program
 type WotoClient struct {
-	client          *mongo.Client
-	ctx             *context.Context
-	settings        interfaces.WSettings
-	MainHostAddress string
-	DataBase1       dbTypes.DATABASE
-	ctxCancel       func()
+	client      *mongo.Client
+	ctx         *context.Context
+	settings    interfaces.WSettings
+	HostAddress string
+	//DataBase1       dbTypes.DATABASE
+	ctxCancel func()
+	index     dbTypes.DB_INDEX
 }
 
 // the map for clients present in the app.
-var clientsMap map[int]interfaces.WClient
+var clientsMap map[dbTypes.DB_INDEX]interfaces.WClient
+
+// GenerateClients will generate all woto clients used in the app.
+func GenerateClients(settings interfaces.WSettings) {
+	// woto configuration client
+	result1, client1 := GenerateClient(CONFIG_CLIENT)
+	if result1 != wa.SUCCESS || client1 == nil {
+		log.Fatal(wv.WOTO_CLIENT_ERROR)
+	}
+	settings.SetWClient(client1)
+
+	// pat client
+	result2, client2 := GenerateClient(PAT_CLIENT)
+	if result2 != wa.SUCCESS || client2 == nil {
+		log.Fatal(wv.PAT_CLIENT_ERROR)
+	}
+	settings.SetPatClient(client2)
+}
 
 // GenerateClient will generate a new data base client for you,
 // if and only if there is no client defined in the program.
 // before calling this function, create a new settings in the app.
-func GenerateClient(index int) (wa.RESULT, interfaces.WClient) {
-	if index < wotoValues.BaseIndex {
-		return wa.CANCELED, nil
-	}
-
+func GenerateClient(index dbTypes.DB_INDEX) (wa.RESULT, interfaces.WClient) {
 	if clientsMap == nil {
-		clientsMap = make(map[int]interfaces.WClient)
+		clientsMap = make(map[dbTypes.DB_INDEX]interfaces.WClient)
 	}
 	if clientsMap[index] != nil {
 		return wa.SUCCESS, clientsMap[index]
 	}
 
 	_c := WotoClient{client: nil}
-
-	_c._setHosts(strconv.Itoa(index))
+	_c.index = index
+	_c._setHosts(strconv.Itoa(int(index)))
 
 	_c._setSettings()
 
 	_c._setClient()
-
-	re := _c.GetWotoConfiguration()
-	if re != wa.SUCCESS {
-		return re, nil
+	if index == CONFIG_CLIENT {
+		re := _c.GetWotoConfiguration()
+		if re != wa.SUCCESS {
+			return re, nil
+		}
 	}
 
 	clientsMap[index] = &_c
@@ -118,7 +133,7 @@ func (_c *WotoClient) _setClient() {
 	_c.ctx = &ctx
 	//_c.ctxCancel = _cancelFunc
 	//clientOptions := options.Client().ApplyURI(hostAddress)
-	clientOptions := options.Client().ApplyURI(_c.MainHostAddress)
+	clientOptions := options.Client().ApplyURI(_c.HostAddress)
 	client, _err := mongo.NewClient(clientOptions)
 	if _err != nil {
 		log.Println(_err)
@@ -136,35 +151,29 @@ func (_c *WotoClient) _setClient() {
 func (_c *WotoClient) _setSettings() {
 	_s := appSettings.GetExisting()
 	if _s == nil {
-		log.Fatal(wotoValues.CLIENT_SETTINGS_NIL)
+		log.Fatal(wv.CLIENT_SETTINGS_NIL)
 	}
 	_c.settings = _s
 }
 
 func (_c *WotoClient) _setHosts(index string) {
-	_s := os.Getenv(wotoValues.HOST_ADDRESS_KEY + index)
+	_s := os.Getenv(wv.HOST_ADDRESS_KEY + index)
 	if wotoStrings.IsEmpty(&_s) {
-		log.Fatal(wotoValues.HOST_ADDRESS_NOTSET + index)
+		log.Fatal(wv.HOST_ADDRESS_NOTSET + index)
 	}
-	_c.MainHostAddress = _s
+	_c.HostAddress = _s
 
-	_s = os.Getenv(wotoValues.DATEBASE1_KEY)
-	if wotoStrings.IsEmpty(&_s) {
-		log.Fatal(wotoValues.DATABASE1_NOTSET)
-	}
-	_c.DataBase1 = dbTypes.DATABASE(_s)
+	//_s = os.Getenv(wv.DATEBASE1_KEY)
+	//if wotoStrings.IsEmpty(&_s) {
+	//	log.Fatal(wv.DATABASE1_NOTSET)
+	//}
+	//_c.DataBase1 = dbTypes.DATABASE(_s)
 }
 
 // getDataBase returns a database with the specified DATABASE value.
 // use DefaultDatabase to get a default database
 func (_c *WotoClient) getDataBase(database dbTypes.DATABASE) *mongo.Database {
-	switch database {
-	case DefaultDatabase:
-		_d := _c.client.Database(string(database))
-		return _d
-	default:
-		return nil
-	}
+	return _c.client.Database(string(database))
 }
 
 // getCollection will give you the specified collection.

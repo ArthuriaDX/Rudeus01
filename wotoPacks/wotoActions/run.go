@@ -14,7 +14,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_settings interfaces.WSettings, _client interfaces.WClient) {
+func RunBot(_settings interfaces.WSettings) {
 	bot, err := tgbotapi.NewBotAPI(_settings.GetObt())
 	_settings.SetAPI(bot)
 	if err != nil {
@@ -24,7 +24,7 @@ func RunBot(_settings interfaces.WSettings, _client interfaces.WClient) {
 
 	bot.Debug = false
 
-	_client.PingClientDB(true)
+	_settings.GetWClient().PingClientDB(true)
 
 	for {
 		_runOnce(bot, _settings)
