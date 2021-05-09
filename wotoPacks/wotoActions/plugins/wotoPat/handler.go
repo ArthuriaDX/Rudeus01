@@ -29,6 +29,7 @@ func Pat_Handler(message *tg.Message, args pTools.Arg) {
 	is_hentai := args.HasFlag(HENTAI_FLAG)
 	send_pv := args.HasFlag(PRIVATE_FLAG, PV_FLAG)
 	is_reply := message.ReplyToMessage != nil
+	is_del := is_reply && args.HasFlag(DEL_FLAG, DELETE_FLAG)
 
 	if is_hentai {
 		if !settings.IsSudo(message.From.ID) {
@@ -59,7 +60,15 @@ func Pat_Handler(message *tg.Message, args pTools.Arg) {
 		return
 	}
 
+	if is_del {
+		req := tg.NewDeleteMessage(message.Chat.ID, message.MessageID)
+		// don't check error or response, we have
+		// more important things to do
+		settings.GetAPI().Request(req)
+	}
+
 	sendPat(message, id, t, send_pv, is_reply)
+
 }
 
 // PatS_Handler is entry handler for a sudo pat command.

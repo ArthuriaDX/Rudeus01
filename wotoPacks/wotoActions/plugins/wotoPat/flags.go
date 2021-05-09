@@ -17,4 +17,6 @@ const (
 	REMOVE_FLAG  = "remove"  // it works only for sudo people
 	HENTAI_FLAG  = "hentai"  // it works only for sudo people
 	PRIVATE_FLAG = "private" // won't work if message is replied
+	DELETE_FLAG  = "delete"  // won't work if message is not replied
+	DEL_FLAG     = "del"     // won't work if message is not replied
 )
