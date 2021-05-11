@@ -14,9 +14,9 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func RunBot(_settings interfaces.WSettings) {
-	bot, err := tgbotapi.NewBotAPI(_settings.GetObt())
-	_settings.SetAPI(bot)
+func RunBot(settings interfaces.WSettings) {
+	bot, err := tgbotapi.NewBotAPI(settings.GetObt())
+	settings.SetAPI(bot)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -24,14 +24,14 @@ func RunBot(_settings interfaces.WSettings) {
 
 	bot.Debug = false
 
-	_settings.GetWClient().PingClientDB(true)
+	settings.GetWClient().PingClientDB(true)
 
 	for {
-		_runOnce(bot, _settings)
+		runOnce(bot, settings)
 	}
 }
 
-func _runOnce(_bot *tgbotapi.BotAPI, _settings interfaces.WSettings) {
+func runOnce(_bot *tgbotapi.BotAPI, _settings interfaces.WSettings) {
 	// Create a new UpdateConfig struct with an offset of 0. Offsets are used
 	// to make sure Telegram knows we've handled previous values and we don't
 	// need them repeated.
@@ -49,7 +49,7 @@ func _runOnce(_bot *tgbotapi.BotAPI, _settings interfaces.WSettings) {
 	for update := range updates {
 		// check if the current application is allowed to handle the update
 		// request or not.
-		if !shouldHangle(&update) {
+		if !shouldHandle(&update) {
 			continue
 		}
 		go HandleMessage(&update, _settings)

@@ -18,7 +18,7 @@ import (
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func ToMorse_handler(message *tg.Message, args pTools.Arg) {
+func ToMorseHandler(message *tg.Message, args pTools.Arg) {
 	// set the first element of args to empty,
 	// because pTools.Arg also contains the command itself,
 	// however we don't want that here.
@@ -40,7 +40,7 @@ func ToMorse_handler(message *tg.Message, args pTools.Arg) {
 		}
 	} else {
 		// do not convert the flags to the morse code.
-		full = args.JoinNoneFlags()
+		full = args.JoinNoneFlags(false)
 	}
 
 	if is_bin {
@@ -63,7 +63,7 @@ func ToMorse_handler(message *tg.Message, args pTools.Arg) {
 	sendMorse(message, &str, is_reply, send_pv)
 }
 
-func FromMorse_handler(message *tg.Message, args pTools.Arg) {
+func FromMorseHandler(message *tg.Message, args pTools.Arg) {
 	// set the first element of args to empty,
 	// because pTools.Arg also contains the command itself,
 	// however we don't want that here.

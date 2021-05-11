@@ -15,13 +15,13 @@ var updatesMap map[int]bool
 
 // shouldHangle will check if you should handle the
 // update or not.
-func shouldHangle(_update *tg.Update) bool {
+func shouldHandle(update *tg.Update) bool {
 	if updatesMap == nil {
 		updatesMap = make(map[int]bool)
 	}
 
-	if !updatesMap[_update.UpdateID] {
-		updatesMap[_update.UpdateID] = true
+	if !updatesMap[update.UpdateID] {
+		updatesMap[update.UpdateID] = true
 	} else {
 		return false
 	}
@@ -30,9 +30,9 @@ func shouldHangle(_update *tg.Update) bool {
 }
 
 // HandleMessage will handle the update comming from the telegram servers.
-func HandleMessage(update *tg.Update, _settings interfaces.WSettings) {
+func HandleMessage(update *tg.Update, settings interfaces.WSettings) {
 	if update.CallbackQuery != nil {
-		_settings.SendSudo(update.CallbackQuery.Data)
+		settings.SendSudo(update.CallbackQuery.Data)
 	}
 	switch getMessageType(update) {
 	case NONE:

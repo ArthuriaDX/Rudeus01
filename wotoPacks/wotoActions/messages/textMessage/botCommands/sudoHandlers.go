@@ -22,5 +22,5 @@ func sudoCommandHandler(message *tg.Message, args pTools.Arg) {
 }
 
 func patCommandHandler(message *tg.Message, args pTools.Arg) {
-	wotoPat.PatS_Handler(message, args)
+	wotoPat.PatSHandler(message, args)
 }

@@ -19,4 +19,8 @@ const (
 	PRIVATE_FLAG = "private" // won't work if message is replied
 	DELETE_FLAG  = "delete"  // won't work if message is not replied
 	DEL_FLAG     = "del"     // won't work if message is not replied
+	PH_FLAG      = "ph"      // won't work if message is not replied
+	PHOTO_FLAG   = "photo"   // won't work if message is not replied
+	MSG_FLAG     = "msg"     // is there any messages for caption?
+	MESSAGE_FLAG = "message" // is there any messages for caption?
 )

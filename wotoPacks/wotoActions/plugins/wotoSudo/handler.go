@@ -53,7 +53,7 @@ func addSudo(message *tg.Message, args pTools.Arg) {
 		} else {
 			tmp := args.GetNonFlags()
 			if tmp == nil || len(tmp) <= wv.BaseIndex {
-				invalid_id(message, args.JoinNoneFlags(), send_pv)
+				invalid_id(message, args.JoinNoneFlags(false), send_pv)
 				return
 			}
 
@@ -105,7 +105,7 @@ func remSudo(message *tg.Message, args pTools.Arg) {
 		if message.ReplyToMessage.From != nil {
 			id = message.ReplyToMessage.From.ID
 		} else {
-			invalid_id(message, args.JoinNoneFlags(), send_pv)
+			invalid_id(message, args.JoinNoneFlags(false), send_pv)
 			return
 		}
 	} else {

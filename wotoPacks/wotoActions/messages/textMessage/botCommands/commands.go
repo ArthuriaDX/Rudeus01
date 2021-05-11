@@ -9,38 +9,39 @@ import (
 	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-type CmdHandler func(*tgbotapi.Message, pTools.Arg)
+// CmdHandler is the c
+type CmdHandler func(*tg.Message, pTools.Arg)
 
 // IsCommand will check if the _text is a command or not.
-func IsCommand(_text *string) bool {
-	return isCommand1(_text) || isCommand2(_text)
+func IsCommand(text *string) bool {
+	return isCommand1(text) || isCommand2(text)
 }
 
 // isCommand1 will check if the _text
 // has first prefex or not.
-func isCommand1(_text *string) bool {
-	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFIX1)
+func isCommand1(text *string) bool {
+	return strings.HasPrefix(*text, wv.COMMAND_PREFIX1)
 }
 
 // isCommand2 will check if the _text
 // has first prefex or not.
-func isCommand2(_text *string) bool {
-	return strings.HasPrefix(*_text, wotoValues.COMMAND_PREFIX2)
+func isCommand2(text *string) bool {
+	return strings.HasPrefix(*text, wv.COMMAND_PREFIX2)
 }
 
-func HandleCommand(message *tgbotapi.Message) {
+func HandleCommand(message *tg.Message) {
 	cmdListInit()
 	text := strings.ToLower(message.Text)
-	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFIX1)
-	text = strings.TrimPrefix(text, wotoValues.COMMAND_PREFIX2)
-	texts := strings.Split(text, wotoValues.SPACE_VALUE)
+	text = strings.TrimPrefix(text, wv.COMMAND_PREFIX1)
+	text = strings.TrimPrefix(text, wv.COMMAND_PREFIX2)
+	texts := strings.Split(text, wv.SPACE_VALUE)
 	//log.Println("before event : ", texts)
 	//log.Println(texts[wotoValues.BaseIndex])
-	event := cmdList[texts[wotoValues.BaseIndex]]
+	event := cmdList[texts[wv.BaseIndex]]
 	if event != nil {
 		event(message, texts)
 	}

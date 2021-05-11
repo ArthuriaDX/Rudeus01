@@ -5,10 +5,10 @@
 	file 'LICENSE', which is part of the source code.
 -->
 
-# <h1 align="middle">📊 wotoSudo plugin 📊 <img src="https://raw.githubusercontent.com/aliwoto/aliwoto/main/resources/Arthuria_Pocker_Face.png" width="50px" align="bottom">
-> Name:		wotoMorse			\
+# <h1 align="middle"> 🕹 wotoSudo plugin 🕹 <img src="https://raw.githubusercontent.com/aliwoto/aliwoto/main/resources/Arthuria_Pocker_Face.png" width="50px" align="bottom">
+> Name:		wotoSudo			\
 > Version:	v1.2.12				\
-> Edit:		8 May 2021			\
+> Edit:		9 May 2021			\
 > By:		ALi.w (C) wotoTeam	
 
 </h1>

@@ -14,6 +14,7 @@ const (
 	HTTP_ADDRESS = ":"
 	FORMAT_VALUE = "%v"
 	SPACE_VALUE  = " "
+	N_ESCAPE     = "\n"
 	SEMICOLON    = ";"
 )
 

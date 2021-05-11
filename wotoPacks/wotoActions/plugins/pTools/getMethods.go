@@ -62,10 +62,16 @@ func (_a *Arg) GetNonFlags() []string {
 }
 
 // JoinNoneFlags will join all the none-flags elements in the arg.
-func (_a *Arg) JoinNoneFlags() string {
+// set command to true if you want to include the command itself.
+func (_a *Arg) JoinNoneFlags(command bool) string {
 	str := wv.EMPTY
 	tmp := wv.EMPTY
-	for _, current := range *_a {
+	for i, current := range *_a {
+		if i == wv.BaseIndex {
+			if !command {
+				continue
+			}
+		}
 		tmp = strings.Trim(current, wv.SPACE_VALUE)
 		if !IsFlag(tmp) {
 			str += tmp + wv.SPACE_VALUE
