@@ -137,11 +137,6 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 	udData = data.(*udQuery)
 	origin := udData.origin
 
-	if query.From.ID != origin.uId {
-		tg.NewCallbackWithAlert(query.ID, "this ud is not for you!")
-		return
-	}
-
 	settings := appSettings.GetExisting()
 	if settings == nil {
 		return
@@ -149,6 +144,15 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 
 	api := settings.GetAPI()
 	if api == nil {
+		return
+	}
+
+	if query.From.ID != origin.uId {
+		config := tg.NewCallbackWithAlert(query.ID, "this ud is not for you!")
+		_, err := api.Request(config)
+		if err != nil {
+			log.Println(err)
+		}
 		return
 	}
 
