@@ -1,0 +1,88 @@
+package wotoQuery
+
+import (
+	"encoding/json"
+	"errors"
+
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
+	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+)
+
+const (
+	NoneQueryPlugin QueryPlugin = 0 // None
+	UdQueryPlugin   QueryPlugin = 1 // wotoUD plugin
+)
+
+type QueryPlugin uint8
+
+type QueryBase struct {
+	Plugin int `json:"p"` // the plugin
+	Data   int `json:"d"` // the data (unique data code)
+}
+
+type WotoQuery interface {
+	GetId() int
+}
+
+var queryMap map[int]WotoQuery
+var last int = 0
+
+func ToQueryBase(data string) (base *QueryBase, err error) {
+	if wotoStrings.IsEmpty(&data) {
+		return nil, errors.New(dataEmptyErr)
+	}
+
+	b := QueryBase{}
+	errJson := json.Unmarshal([]byte(data), &b)
+	if errJson != nil {
+		return nil, errJson
+	}
+
+	return &b, nil
+}
+
+func GetQuery(plugin QueryPlugin, dataCode int) *QueryBase {
+	return &QueryBase{
+		Plugin: int(plugin),
+		Data:   dataCode,
+	}
+}
+
+func SetInMap(value WotoQuery) int {
+	mapInit()
+	last++
+	for {
+		if last == wv.BaseIndex {
+			return wv.BaseIndex
+		}
+		if queryMap[last] != nil {
+			last++
+			continue
+		}
+		queryMap[last] = value
+		return last
+	}
+}
+
+// RemoveFromMap will remove all of the queries with the specified
+// id from the map.
+// the ID should be message id.
+func RemoveFromMap(ID int) {
+	for i := wv.BaseIndex; i <= last; i++ {
+		if queryMap[i] != nil {
+			if queryMap[i].GetId() == ID {
+				queryMap[i] = nil
+			}
+		}
+	}
+}
+
+func mapInit() {
+	if queryMap == nil {
+		queryMap = make(map[int]WotoQuery)
+	}
+}
+
+func getFromMap(index int) WotoQuery {
+	return queryMap[index]
+}

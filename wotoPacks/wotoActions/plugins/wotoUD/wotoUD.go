@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -66,7 +65,7 @@ func Define(word string) (ud *UrbanCollection, err error) {
 
 	udValue := UrbanCollection{}
 
-	log.Println(string(jData))
+	//log.Println(string(jData))
 	jErr := json.Unmarshal(jData, &udValue)
 
 	if jErr != nil {

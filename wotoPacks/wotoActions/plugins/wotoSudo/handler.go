@@ -27,10 +27,11 @@ func Sudo_handler(message *tg.Message, args pTools.Arg) {
 	// because pTools.Arg also contains the command itself,
 	// however we don't want that here.
 	args[wv.BaseIndex] = wv.EMPTY
+	isMain := appSettings.GetExisting().IsMainSudo(message.From.ID)
 
-	if args.HasFlag(ADD_FLAG) {
+	if args.HasFlag(ADD_FLAG) && isMain {
 		addSudo(message, args)
-	} else if args.HasFlag(REMOVE_FLAG, REM_FLAG, RM_FLAG) {
+	} else if args.HasFlag(REMOVE_FLAG, REM_FLAG, RM_FLAG) && isMain {
 		remSudo(message, args)
 	}
 }

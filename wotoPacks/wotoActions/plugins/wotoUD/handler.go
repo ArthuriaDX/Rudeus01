@@ -2,10 +2,11 @@ package wotoUD
 
 import (
 	"log"
+	"reflect"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
+	wq "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoQuery"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages"
@@ -37,26 +38,14 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 		return
 	}
 
-	ud, err := Define(text)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	//text = wotoMD.GetNormal(ud.List[0].Def).ToString()
-	normal := wotoMD.GetNormal(ud.List[0].Def)
-	ex := wotoMD.GetItalic(wv.N_ESCAPE + wv.N_ESCAPE + ud.List[0].Example)
-	text = normal.Append(ex).ToString()
+	finalText, ud := defineText(text)
 
 	var msg tg.MessageConfig
 
 	if pv {
-
-		//settings.SendSudo(strconv.Itoa(int(message.From.ID)))
-		msg = tg.NewMessage(message.From.ID, text)
+		msg = tg.NewMessage(message.From.ID, finalText)
 	} else {
-		//settings.SendSudo(strconv.Itoa(int(message.Chat.ID)))
-		msg = tg.NewMessage(message.Chat.ID, text)
+		msg = tg.NewMessage(message.Chat.ID, finalText)
 	}
 
 	// !pv => for fixing: Bad Request: replied message not found
@@ -73,30 +62,110 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 			msg.ReplyToMessageID = message.MessageID
 		}
 	}
-	msg.ReplyMarkup = getButton(0)
+	msg.ReplyMarkup = getButton(text, message.MessageID, ud)
 
 	msg.ParseMode = tg.ModeMarkdownV2
 	if _, err := api.Send(msg); err != nil {
 
 		log.Println(err)
 		tgErr := tgMessages.GetTgError(err)
-		tgErr.SendRandomErrorMessage(message)
+		if tgErr != nil {
+			tgErr.SendRandomErrorMessage(message)
+		}
 		return
 	}
-
 }
 
-func getButton(page int) *tg.InlineKeyboardMarkup {
-	//b01 := tg.NewInlineKeyboardButtonURL(text, burl)
-	b01 := tg.NewInlineKeyboardButtonData(previousText, "test2")
-	b02 := tg.NewInlineKeyboardButtonData(nextText,
-		"12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890")
+func defineText(word string) (str string, c *UrbanCollection) {
+	ud, err := Define(word)
+	if err != nil {
+		log.Println(err)
+		return wv.EMPTY, nil
+	}
+
+	return ud.GetDef(wv.BaseIndex), ud
+}
+
+func getButton(word string, id int,
+	c *UrbanCollection) *tg.InlineKeyboardMarkup {
+
+	origin := getNewOrigin(word, id)
+	origin.setCollection(c)
+	pre := getPreviousUdQuery(origin)
+	next := getNextUdQuery(origin)
+	preID := wq.SetInMap(pre)
+	nextID := wq.SetInMap(next)
+	q1 := wq.GetQuery(wq.UdQueryPlugin, preID)
+	q2 := wq.GetQuery(wq.UdQueryPlugin, nextID)
+	b01 := tg.NewInlineKeyboardButtonData(preText, q1.ToString())
+	b02 := tg.NewInlineKeyboardButtonData(nextText, q2.ToString())
 	buttons := tg.NewInlineKeyboardMarkup(
 		tg.NewInlineKeyboardRow(
 			b01,
 			b02,
 		),
 	)
+	origin.setButtons(&buttons)
 
 	return &buttons
+}
+
+func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
+	data := q.GetDataQuery()
+	if data == nil {
+		return
+	}
+
+	udData := &udQuery{}
+	if reflect.TypeOf(udData) != reflect.TypeOf(data) {
+		return
+	}
+
+	udData = data.(*udQuery)
+	origin := udData.origin
+
+	settings := appSettings.GetExisting()
+	if settings == nil {
+		return
+	}
+
+	api := settings.GetAPI()
+	if api == nil {
+		return
+	}
+
+	if udData.next {
+		if origin.currentPage == uint8(len(origin.collection.List)) {
+			origin.currentPage = wv.BaseOneIndex
+		} else {
+			origin.currentPage++
+			//log.Println("In next, else. current:", udData.currentPage)
+		}
+		//log.Println("in next")
+	} else if udData.previous {
+		if origin.currentPage == wv.BaseOneIndex {
+			origin.currentPage = uint8(len(origin.collection.List))
+		} else {
+			origin.currentPage--
+		}
+
+		//log.Println("in pre")
+	}
+
+	//log.Println("my current is: ", udData.currentPage)
+	//log.Println("List: ", udData.collection.List, "adn len:", len(udData.collection.List))
+
+	page := origin.currentPage - wv.BaseOneIndex
+	text := origin.collection.GetDef(page)
+	chat := query.Message.Chat.ID
+	msgId := query.Message.MessageID
+
+	eConfig := tg.NewEditMessageText(chat, msgId, text)
+	eConfig.ReplyMarkup = origin.keyboard
+	eConfig.ParseMode = tg.ModeMarkdownV2
+
+	_, err := api.Request(eConfig)
+	if err != nil {
+		log.Println(err)
+	}
 }

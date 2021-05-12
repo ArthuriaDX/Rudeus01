@@ -14,13 +14,19 @@ import (
 type MessageType uint8
 
 const (
-	NONE                      = 0
-	TEXT_MESSAGE  MessageType = 1
-	GIF_MESSAGE   MessageType = 2
-	PHOTO_MESSAGE MessageType = 3
+	NONE                       = 0
+	CALLBACK_QUERY MessageType = 1
+	TEXT_MESSAGE   MessageType = 2
+	GIF_MESSAGE    MessageType = 3
+	PHOTO_MESSAGE  MessageType = 4
 )
 
 func getMessageType(_update *tg.Update) MessageType {
+
+	if _checkCallBackQuery(_update) {
+		return CALLBACK_QUERY
+	}
+
 	if _checkTextMessage(_update) {
 		return TEXT_MESSAGE
 	}
@@ -34,6 +40,10 @@ func getMessageType(_update *tg.Update) MessageType {
 	}
 
 	return NONE
+}
+
+func _checkCallBackQuery(_update *tg.Update) bool {
+	return _update.CallbackQuery != nil
 }
 
 func _checkTextMessage(_update *tg.Update) bool {

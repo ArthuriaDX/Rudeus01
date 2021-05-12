@@ -1,5 +1,7 @@
 package wotoUD
 
+import wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+
 // the url for urban dictionary public API.
 const (
 	hostUrl = "https://api.urbandictionary.com/v0/define?term="
@@ -13,6 +15,9 @@ const (
 )
 
 const (
-	nextText     = "next page"
-	previousText = "previous page"
+	nextText = "next page"     // the next button Text
+	preText  = "previous page" // the previous button Text
+	footnote = "\n\n-----------------------\nPage " +
+		wv.FORMAT_VALUE + " of " + wv.FORMAT_VALUE
+	listNAvailble = "list is not available anymore."
 )
