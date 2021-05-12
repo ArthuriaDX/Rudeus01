@@ -127,6 +127,8 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 		return
 	}
 
+	tg.NewCallbackWithAlert(query.ID, "test!")
+
 	udData := &udQuery{}
 	if reflect.TypeOf(udData) != reflect.TypeOf(data) {
 		return
