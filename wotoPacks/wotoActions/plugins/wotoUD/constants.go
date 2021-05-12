@@ -20,4 +20,5 @@ const (
 	footnote = "\n\n-----------------------\nPage " +
 		wv.FORMAT_VALUE + " of " + wv.FORMAT_VALUE
 	listNAvailble = "list is not available anymore."
+	notAllowed    = "Owo ~ You are not allowed to use this button!"
 )

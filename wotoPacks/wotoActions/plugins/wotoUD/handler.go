@@ -126,6 +126,9 @@ func getButton(word string, id int, userId int64,
 func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 	data := q.GetDataQuery()
 	if data == nil {
+		// this the point where we have to show the user:
+		// list is not available anymore.
+		notAvialable(query)
 		return
 	}
 
@@ -148,7 +151,7 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 	}
 
 	if query.From.ID != origin.uId {
-		config := tg.NewCallbackWithAlert(query.ID, "this ud is not for you!")
+		config := tg.NewCallbackWithAlert(query.ID, notAllowed)
 		_, err := api.Request(config)
 		if err != nil {
 			log.Println(err)
@@ -189,5 +192,26 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 	_, err := api.Request(eConfig)
 	if err != nil {
 		log.Println(err)
+	}
+}
+
+func notAvialable(query *tg.CallbackQuery) {
+	settings := appSettings.GetExisting()
+	if settings == nil {
+		return
+	}
+
+	api := settings.GetAPI()
+	if api == nil {
+		return
+	}
+
+	chat := query.Message.Chat.ID
+	msg := query.Message.MessageID
+	config := tg.NewEditMessageText(chat, msg, listNAvailble)
+	_, err := api.Request(config)
+	if err != nil {
+		log.Println(err)
+		return
 	}
 }
