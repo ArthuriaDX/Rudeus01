@@ -29,11 +29,12 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 	}
 
 	pv := args.HasFlag(PRIVATE_FLAG, PV_FLAG)
-	//hasMsg := args.HasFlag(MSG_FLAG, MESSAGE_FLAG)
+	// hasMsg := args.HasFlag(MSG_FLAG, MESSAGE_FLAG)
 	reply := message.ReplyToMessage != nil
-	//del := reply && args.HasFlag(DEL_FLAG, DELETE_FLAG)
-	//single := args.HasFlag(SINGLE_FLAG)
+	del := reply && args.HasFlag(DEL_FLAG, DELETE_FLAG)
+	single := args.HasFlag(SINGLE_FLAG)
 	text := args.JoinNoneFlags(false)
+
 	if wotoStrings.IsEmpty(&text) {
 		return
 	}
@@ -62,7 +63,17 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 			msg.ReplyToMessageID = message.MessageID
 		}
 	}
-	msg.ReplyMarkup = getButton(text, message.MessageID, ud)
+
+	if !single {
+		msg.ReplyMarkup = getButton(text, message.MessageID, ud)
+	}
+
+	if del {
+		req := tg.NewDeleteMessage(message.Chat.ID, message.MessageID)
+		// don't check error or response, we have
+		// more important things to do
+		go settings.GetAPI().Request(req)
+	}
 
 	msg.ParseMode = tg.ModeMarkdownV2
 	if _, err := api.Send(msg); err != nil {
