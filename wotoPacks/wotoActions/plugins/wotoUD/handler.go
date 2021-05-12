@@ -209,6 +209,7 @@ func notAvialable(query *tg.CallbackQuery) {
 	chat := query.Message.Chat.ID
 	msg := query.Message.MessageID
 	config := tg.NewEditMessageText(chat, msg, query.Message.Text)
+	config.Entities = query.Message.Entities
 	_, err := api.Request(config)
 	if err != nil {
 		log.Println(err)
