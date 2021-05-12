@@ -45,7 +45,7 @@ func cancelMessage(query *tg.CallbackQuery) {
 
 	chat := query.Message.Chat.ID
 	msg := query.Message.MessageID
-	config := tg.NewEditMessageText(chat, msg, notAvialable)
+	config := tg.NewEditMessageText(chat, msg, query.Message.Text)
 	_, err := api.Request(config)
 	if err != nil {
 		log.Println(err)
