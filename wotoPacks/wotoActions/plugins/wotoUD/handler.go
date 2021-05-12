@@ -65,7 +65,9 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 	}
 
 	if !single {
-		msg.ReplyMarkup = getButton(text, message.MessageID, ud)
+		mId := message.MessageID
+		uId := message.From.ID
+		msg.ReplyMarkup = getButton(text, mId, uId, ud)
 	}
 
 	if del {
@@ -97,10 +99,10 @@ func defineText(word string) (str string, c *UrbanCollection) {
 	return ud.GetDef(wv.BaseIndex), ud
 }
 
-func getButton(word string, id int,
+func getButton(word string, id int, userId int64,
 	c *UrbanCollection) *tg.InlineKeyboardMarkup {
 
-	origin := getNewOrigin(word, id)
+	origin := getNewOrigin(word, id, userId)
 	origin.setCollection(c)
 	pre := getPreviousUdQuery(origin)
 	next := getNextUdQuery(origin)
@@ -127,8 +129,6 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 		return
 	}
 
-	tg.NewCallbackWithAlert(query.ID, "test!")
-
 	udData := &udQuery{}
 	if reflect.TypeOf(udData) != reflect.TypeOf(data) {
 		return
@@ -136,6 +136,11 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 
 	udData = data.(*udQuery)
 	origin := udData.origin
+
+	if query.From.ID != origin.uId {
+		tg.NewCallbackWithAlert(query.ID, "this ud is not for you!")
+		return
+	}
 
 	settings := appSettings.GetExisting()
 	if settings == nil {

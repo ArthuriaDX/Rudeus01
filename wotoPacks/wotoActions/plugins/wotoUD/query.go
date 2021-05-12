@@ -17,16 +17,18 @@ type udOrigin struct {
 	currentPage uint8                    // must be between 1 and 10.
 	word        string                   // the word used in urban dictionary
 	id          int                      // the message id
+	uId         int64                    // the user id (owner of the ud)
 	collection  *UrbanCollection         // the collection
 	keyboard    *tg.InlineKeyboardMarkup //the buttons
 }
 
 // getNewOrigin will give you a new origin.
-func getNewOrigin(w string, mId int) (origin *udOrigin) {
+func getNewOrigin(w string, mId int, userId int64) (origin *udOrigin) {
 	return &udOrigin{
 		currentPage: wv.BaseIndex,
 		word:        w,
 		id:          mId,
+		uId:         userId,
 	}
 }
 
