@@ -21,7 +21,7 @@ const (
 	// unsignedStrs4 = "\u003e" don't use them separately
 )
 
-func GetSimilarWord(word string) (str []string, err error) {
+func GetSimilarWords(word string) (str []string, err error) {
 	if ws.IsEmpty(&word) {
 		return nil, errors.New(emptyWordErr)
 	}

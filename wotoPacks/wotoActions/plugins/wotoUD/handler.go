@@ -48,7 +48,7 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 	if !found {
 		tmpStr := fmt.Sprintf(notFound, text)
 
-		sim, simErr := GetSimilarWord(text)
+		sim, simErr := GetSimilarWords(text)
 		simOK := simErr == nil && sim != nil && len(sim) != wv.BaseIndex
 
 		if !simOK {
@@ -129,6 +129,9 @@ func defineText(word string) (str string, c *UrbanCollection) {
 	return ud.GetDef(wv.BaseIndex), ud
 }
 
+// getButton will give you the button(s).
+// also it wil do the dirty works for origin.
+// it will save the buttons in map.
 func getButton(word string, id int, userId int64,
 	c *UrbanCollection, unique string) *tg.InlineKeyboardMarkup {
 
@@ -158,6 +161,8 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 	if data == nil {
 		// this the point where we have to show the user:
 		// list is not available anymore.
+		// NOTE: in new version, we will simply remove the
+		// buttons, we won't remove the text itself anymore.
 		notAvialable(query)
 		return
 	}
@@ -188,8 +193,6 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 		}
 		return
 	}
-
-	//log.Println("B :", origin.currentPage)
 
 	if udData.next {
 		if origin.currentPage == uint8(len(origin.collection.List)) {

@@ -35,9 +35,9 @@ const (
 		wv.FORMAT_VALUE + " of " + wv.FORMAT_VALUE
 	listNAvailble = "list is not available anymore."
 	notAllowed    = "Owo ~ You are not allowed to use this button!"
-	notFound      = "couldn't find \"" +
-		wv.FORMAT_VALUE + "\"\n"
-	simNotice = "hmmmm, here are some similarities: \n"
+	notFound      = "Senpai! >.< I couldn't find \"" +
+		wv.FORMAT_VALUE + "\" at all~~\n"
+	simNotice = "✧But take a look at these similarities >-<: \n"
 	numSep    = " - "
 )
 
