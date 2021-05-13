@@ -22,6 +22,12 @@ import (
 )
 
 func main() {
+	// str, err := wotoUD.GetSimilarWord("partucularly")
+	//str, err := wotoUD.GetSimilarWord("submarne")
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//log.Println(str)
 	//resp, err := http.Get("https://api.gnuweeb.org/google_translate.php?fr=en&to=ja&text=Good+Morning")
 	//if err != nil {
 	//	log.Fatal(err)

@@ -21,12 +21,14 @@ const (
 
 // the string base constant values.
 const (
-	BaseIndexStr    = "0" // number 0
-	BaseOneIndexStr = "1" // number 1
-	DotStr          = "." // dot : .
-	LineStr         = "-" // line : -
-	EMPTY           = ""  //an empty string.
-	UNDER           = "_" // an underscope
+	BaseIndexStr    = "0"  // number 0
+	BaseOneIndexStr = "1"  // number 1
+	DotStr          = "."  // dot : .
+	LineStr         = "-"  // line : -
+	EMPTY           = ""   //an empty string.
+	UNDER           = "_"  // an underscope
+	STR_SIGN        = "\"" // the string sign
+	CHAR_STR        = '"'  // the string sign
 )
 
 const SUDO int64 = 1341091260

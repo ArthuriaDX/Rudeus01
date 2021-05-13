@@ -34,5 +34,5 @@ func (q *QueryBase) GetType() QueryPlugin {
 }
 
 func (q *QueryBase) GetDataQuery() WotoQuery {
-	return getFromMap(q.Data)
+	return getFromMap(q.Data, q.UniqueId)
 }

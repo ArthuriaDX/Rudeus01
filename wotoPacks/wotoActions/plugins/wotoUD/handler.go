@@ -1,13 +1,16 @@
 package wotoUD
 
 import (
+	"fmt"
 	"log"
 	"reflect"
+	"strconv"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
 	wq "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoQuery"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
+	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -35,11 +38,37 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 	single := args.HasFlag(SINGLE_FLAG)
 	text := args.JoinNoneFlags(false)
 
-	if wotoStrings.IsEmpty(&text) {
+	if ws.IsEmpty(&text) {
 		return
 	}
 
 	finalText, ud := defineText(text)
+	found := ud.Found()
+
+	if !found {
+		tmpStr := fmt.Sprintf(notFound, text)
+
+		sim, simErr := GetSimilarWord(text)
+		simOK := simErr == nil && sim != nil && len(sim) != wv.BaseIndex
+
+		if !simOK {
+			finalText = wotoMD.GetNormal(tmpStr).ToString()
+		} else {
+			tmp := wotoMD.GetNormal(tmpStr)
+			mean := simNotice
+			num := wv.BaseOneIndex
+			for _, s := range sim {
+				if ws.IsEmpty(&s) {
+					continue
+				}
+
+				mean += strconv.Itoa(num) + numSep + s + wv.N_ESCAPE
+				num++
+			}
+			tmp = tmp.Append(wotoMD.GetItalic(mean))
+			finalText = tmp.ToString()
+		}
+	}
 
 	var msg tg.MessageConfig
 
@@ -50,7 +79,7 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 	}
 
 	// !pv => for fixing: Bad Request: replied message not found
-	if reply && !pv {
+	if reply && !pv && found {
 		r := message.ReplyToMessage
 		if r != nil {
 			msg.ReplyToMessageID = r.MessageID
@@ -64,13 +93,14 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 		}
 	}
 
-	if !single {
+	if !single && found {
 		mId := message.MessageID
 		uId := message.From.ID
-		msg.ReplyMarkup = getButton(text, mId, uId, ud)
+		unique := strconv.FormatInt(int64(message.Date), wv.BaseTen)
+		msg.ReplyMarkup = getButton(text, mId, uId, ud, unique)
 	}
 
-	if del {
+	if del && found {
 		req := tg.NewDeleteMessage(message.Chat.ID, message.MessageID)
 		// don't check error or response, we have
 		// more important things to do
@@ -100,16 +130,16 @@ func defineText(word string) (str string, c *UrbanCollection) {
 }
 
 func getButton(word string, id int, userId int64,
-	c *UrbanCollection) *tg.InlineKeyboardMarkup {
+	c *UrbanCollection, unique string) *tg.InlineKeyboardMarkup {
 
-	origin := getNewOrigin(word, id, userId)
+	origin := getNewOrigin(word, id, userId, unique)
 	origin.setCollection(c)
 	pre := getPreviousUdQuery(origin)
 	next := getNextUdQuery(origin)
 	preID := wq.SetInMap(pre)
 	nextID := wq.SetInMap(next)
-	q1 := wq.GetQuery(wq.UdQueryPlugin, preID)
-	q2 := wq.GetQuery(wq.UdQueryPlugin, nextID)
+	q1 := wq.GetQuery(wq.UdQueryPlugin, preID, unique)
+	q2 := wq.GetQuery(wq.UdQueryPlugin, nextID, unique)
 	b01 := tg.NewInlineKeyboardButtonData(preText, q1.ToString())
 	b02 := tg.NewInlineKeyboardButtonData(nextText, q2.ToString())
 	buttons := tg.NewInlineKeyboardMarkup(
@@ -159,29 +189,25 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 		return
 	}
 
+	//log.Println("B :", origin.currentPage)
+
 	if udData.next {
 		if origin.currentPage == uint8(len(origin.collection.List)) {
 			origin.currentPage = wv.BaseOneIndex
 		} else {
 			origin.currentPage++
-			//log.Println("In next, else. current:", udData.currentPage)
 		}
-		//log.Println("in next")
 	} else if udData.previous {
 		if origin.currentPage == wv.BaseOneIndex {
 			origin.currentPage = uint8(len(origin.collection.List))
 		} else {
 			origin.currentPage--
 		}
-
-		//log.Println("in pre")
 	}
-
-	//log.Println("my current is: ", udData.currentPage)
-	//log.Println("List: ", udData.collection.List, "adn len:", len(udData.collection.List))
-
+	//log.Println("B :", origin.currentPage)
 	page := origin.currentPage - wv.BaseOneIndex
 	text := origin.collection.GetDef(page)
+	//log.Println(text)
 	chat := query.Message.Chat.ID
 	msgId := query.Message.MessageID
 

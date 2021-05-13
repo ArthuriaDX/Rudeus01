@@ -16,12 +16,14 @@ const (
 type QueryPlugin uint8
 
 type QueryBase struct {
-	Plugin int `json:"p"` // the plugin
-	Data   int `json:"d"` // the data (unique data code)
+	Plugin   int    `json:"p"` // the plugin
+	Data     int    `json:"d"` // the data (unique data code)
+	UniqueId string `json:"u"` // the unique id of source message
 }
 
 type WotoQuery interface {
 	GetId() int
+	GetUniqueId() string
 }
 
 var queryMap map[int]WotoQuery
@@ -41,10 +43,11 @@ func ToQueryBase(data string) (base *QueryBase, err error) {
 	return &b, nil
 }
 
-func GetQuery(plugin QueryPlugin, dataCode int) *QueryBase {
+func GetQuery(plugin QueryPlugin, dataCode int, unique string) *QueryBase {
 	return &QueryBase{
-		Plugin: int(plugin),
-		Data:   dataCode,
+		Plugin:   int(plugin),
+		Data:     dataCode,
+		UniqueId: unique,
 	}
 }
 
@@ -83,6 +86,15 @@ func mapInit() {
 	}
 }
 
-func getFromMap(index int) WotoQuery {
-	return queryMap[index]
+func getFromMap(index int, uniqueId string) WotoQuery {
+	current := queryMap[index]
+	if current == nil {
+		return current
+	}
+
+	if current.GetUniqueId() != uniqueId {
+		return nil
+	}
+
+	return current
 }

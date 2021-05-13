@@ -20,15 +20,17 @@ type udOrigin struct {
 	uId         int64                    // the user id (owner of the ud)
 	collection  *UrbanCollection         // the collection
 	keyboard    *tg.InlineKeyboardMarkup //the buttons
+	uniqueId    string                   // look, it should be the date
 }
 
 // getNewOrigin will give you a new origin.
-func getNewOrigin(w string, mId int, userId int64) (origin *udOrigin) {
+func getNewOrigin(w string, mId int, userId int64, unique string) (origin *udOrigin) {
 	return &udOrigin{
-		currentPage: wv.BaseIndex,
+		currentPage: wv.BaseOneIndex,
 		word:        w,
 		id:          mId,
 		uId:         userId,
+		uniqueId:    unique,
 	}
 }
 

@@ -13,6 +13,10 @@ func (ud *udQuery) GetId() int {
 	return ud.origin.id
 }
 
+func (ud *udQuery) GetUniqueId() string {
+	return ud.origin.uniqueId
+}
+
 //---------------------------------------------------------
 
 // GetDef will give you the definition in the specified page,
@@ -31,6 +35,10 @@ func (c *UrbanCollection) GetDef(page uint8) (str string) {
 	end := fmt.Sprintf(footnote, actual, len(c.List))
 	final := normal.Append(ex).Append(wotoMD.GetNormal(end))
 	return final.ToString()
+}
+
+func (c *UrbanCollection) Found() bool {
+	return len(c.List) != wv.BaseIndex
 }
 
 //---------------------------------------------------------
