@@ -7,35 +7,34 @@ package wotoStrong
 
 import (
 	"reflect"
-	"strconv"
+	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
-	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
 // GetValue will give you the real value of this StrongString.
-func (_s *StrongString) GetValue() *string {
-	realString := ConvertToString(_s._value)
-	return &realString
+func (_s *StrongString) GetValue() string {
+	return string(_s._value)
 }
 
 // length method, will give you the length-as-int of this StrongString.
 func (_s *StrongString) Length() int {
-	return len(*_s.GetValue())
+	return len(_s._value)
 }
 
 // isEmpty will check if this StrongString is empty or not.
 func (_s *StrongString) IsEmpty() bool {
-	return ws.IsEmpty(_s.GetValue())
+	return _s._value == nil || len(_s._value) == wv.BaseIndex
 }
 
 // isEqual will check if the passed-by-value in the arg is equal to this
 // StrongString or not.
 func (_s *StrongString) IsEqual(_q interfaces.QString) bool {
 	if reflect.TypeOf(_q) != reflect.TypeOf(_s) {
-		return *_q.GetValue() == *_s.GetValue()
+		return _q.GetValue() == _s.GetValue()
 	}
+
 	_strong, _ok := _q.(*StrongString)
 	if !_ok {
 		return false
@@ -54,24 +53,76 @@ func (_s *StrongString) IsEqual(_q interfaces.QString) bool {
 	return true
 }
 
-// GetString will give you an encoded string with the High-security
-// level which you should use it in the database.
-func (_s *StrongString) GetString() string {
-	var _current int
-	var total = wv.EMPTY
-	for _, b := range _s._value {
-		_current = int(b)
-		total += strconv.Itoa(_current)
-		total += wv.LineStr
-	}
-	return total
-}
-
 // GetIndexV method will give you the rune in _index.
 func (_s *StrongString) GetIndexV(_index int) rune {
+	if _s.IsEmpty() {
+		return wv.BaseIndex
+	}
+
 	l := len(_s._value)
-	if l >= len(_s._value) || l < wv.BaseIndex {
+
+	if _index >= l || l < wv.BaseIndex {
+
 		return _s._value[wv.BaseIndex]
 	}
+
 	return _s._value[_index]
+}
+
+// HasSuffix will check if at least there is one suffix is
+// presents in this StrongString not.
+// the StrongString should ends with at least one of these suffixes.
+func (_s *StrongString) HasSuffix(values ...string) bool {
+	for _, s := range values {
+		if strings.HasSuffix(_s.GetValue(), s) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// HasSuffixes will check if all of the suffixes are
+// present in this StrongString or not.
+// the StrongString should ends with all of these suffixes.
+// usage of this method is not recommended, since you can use
+// HasSuffix method with only one string (the longest string).
+// this way you will just use too much cpu resources.
+func (_s *StrongString) HasSuffixes(values ...string) bool {
+	for _, s := range values {
+		if !strings.HasSuffix(_s.GetValue(), s) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// HasPrefix will check if at least there is one prefix is
+// presents in this StrongString or not.
+// the StrongString should starts with at least one of these prefixes.
+func (_s *StrongString) HasPrefix(values ...string) bool {
+	for _, s := range values {
+		if strings.HasPrefix(_s.GetValue(), s) {
+			return true
+		}
+	}
+
+	return false
+}
+
+// HasPrefixes will check if all of the prefixes are
+// present in this StrongString or not.
+// the StrongString should ends with all of these suffixes.
+// usage of this method is not recommended, since you can use
+// HasSuffix method with only one string (the longest string).
+// this way you will just use too much cpu resources.
+func (_s *StrongString) HasPrefixes(values ...string) bool {
+	for _, s := range values {
+		if !strings.HasPrefix(_s.GetValue(), s) {
+			return false
+		}
+	}
+
+	return true
 }

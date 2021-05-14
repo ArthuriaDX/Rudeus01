@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoUD
 
 import (
@@ -5,14 +10,17 @@ import (
 	"log"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
+	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
 	wq "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoQuery"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
+	wm "github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages/tgForbidden"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -52,9 +60,9 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 		simOK := simErr == nil && sim != nil && len(sim) != wv.BaseIndex
 
 		if !simOK {
-			finalText = wotoMD.GetNormal(tmpStr).ToString()
+			finalText = wm.GetNormal(tmpStr).ToString()
 		} else {
-			tmp := wotoMD.GetNormal(tmpStr)
+			tmp := wm.GetNormal(tmpStr)
 			mean := simNotice
 			num := wv.BaseOneIndex
 			for _, s := range sim {
@@ -65,7 +73,7 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 				mean += strconv.Itoa(num) + numSep + s + wv.N_ESCAPE
 				num++
 			}
-			tmp = tmp.Append(wotoMD.GetItalic(mean))
+			tmp = tmp.Append(wm.GetItalic(mean))
 			finalText = tmp.ToString()
 		}
 	}
@@ -97,7 +105,7 @@ func UdHandler(message *tg.Message, args pTools.Arg) {
 		mId := message.MessageID
 		uId := message.From.ID
 		unique := strconv.FormatInt(int64(message.Date), wv.BaseTen)
-		msg.ReplyMarkup = getButton(text, mId, uId, ud, unique)
+		msg.ReplyMarkup = getButtons(text, mId, uId, ud, unique)
 	}
 
 	if del && found {
@@ -132,23 +140,30 @@ func defineText(word string) (str string, c *UrbanCollection) {
 // getButton will give you the button(s).
 // also it wil do the dirty works for origin.
 // it will save the buttons in map.
-func getButton(word string, id int, userId int64,
+func getButtons(word string, id int, userId int64,
 	c *UrbanCollection, unique string) *tg.InlineKeyboardMarkup {
 
 	origin := getNewOrigin(word, id, userId, unique)
 	origin.setCollection(c)
 	pre := getPreviousUdQuery(origin)
 	next := getNextUdQuery(origin)
+	voice := getVoiceUdQuery(origin)
 	preID := wq.SetInMap(pre)
 	nextID := wq.SetInMap(next)
+	voiceID := wq.SetInMap(voice)
 	q1 := wq.GetQuery(wq.UdQueryPlugin, preID, unique)
 	q2 := wq.GetQuery(wq.UdQueryPlugin, nextID, unique)
+	q3 := wq.GetQuery(wq.UdQueryPlugin, voiceID, unique)
 	b01 := tg.NewInlineKeyboardButtonData(preText, q1.ToString())
 	b02 := tg.NewInlineKeyboardButtonData(nextText, q2.ToString())
+	b03 := tg.NewInlineKeyboardButtonData(voiceText, q3.ToString())
 	buttons := tg.NewInlineKeyboardMarkup(
 		tg.NewInlineKeyboardRow(
 			b01,
 			b02,
+		),
+		tg.NewInlineKeyboardRow(
+			b03,
 		),
 	)
 	origin.setButtons(&buttons)
@@ -185,12 +200,16 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 		return
 	}
 
-	if query.From.ID != origin.uId {
-		config := tg.NewCallbackWithAlert(query.ID, notAllowed)
+	sendAlert := func(text string) {
+		config := tg.NewCallbackWithAlert(query.ID, text)
 		_, err := api.Request(config)
 		if err != nil {
 			log.Println(err)
 		}
+	}
+
+	if query.From.ID != origin.uId && !udData.voice {
+		sendAlert(notAllowed)
 		return
 	}
 
@@ -206,7 +225,72 @@ func QUdHanler(query *tg.CallbackQuery, q *wq.QueryBase) {
 		} else {
 			origin.currentPage--
 		}
+	} else if udData.voice {
+		col := origin.collection
+		if col == nil {
+			return
+		}
+
+		if !col.HasVoice(origin.currentPage) {
+			sendAlert(noVoices)
+			return
+		}
+
+		vUrls := col.GetVoiceUrls(origin.currentPage)
+		if vUrls == nil {
+			sendAlert(noVoices)
+			return
+		}
+
+		vText := wm.GetNormal(fmt.Sprintf(voiceCap, origin.word))
+		tmpV := wv.EMPTY
+		index := wv.BaseOneIndex
+		iStr := wv.EMPTY
+		var tmpMd, tmpH, tmpH2 interfaces.WMarkDown
+
+		for _, current := range vUrls {
+			iStr = strconv.Itoa(index)
+			tmpV = wv.N_ESCAPE + iStr + numSep
+			tmpMd = wm.GetNormal(tmpV)
+			iStr = voiceStr + iStr
+			tmpH2 = wm.GetHyperLink(iStr, current)
+			tmpH = tmpMd.Append(tmpH2)
+			vText = vText.Append(tmpH)
+			index++
+		}
+
+		vConfig := tg.NewMessage(query.From.ID, vText.ToString())
+		vConfig.ParseMode = tg.ModeMarkdownV2
+		_, err := api.Send(vConfig)
+		if err != nil {
+			if strings.Contains(err.Error(), tgForbidden.START_CHAT) {
+				sendAlert(startVoice)
+			}
+			log.Println(err)
+		} else {
+			var cStr string
+			if query.Message.Chat.IsPrivate() {
+				cStr = sentPv
+			} else {
+				cStr = checkPv
+			}
+			callConfig := tg.NewCallback(query.ID, cStr)
+			_, err := api.Request(callConfig)
+			if err != nil {
+				log.Println(err)
+			}
+		}
+		// NOTE:
+		// it seems we can't upload it to telegram,
+		// well it doesn't metter actually.
+		// instead of sending it as voice, we can send the link.
+		// 		note in : 13 May 2021, BY: ALiwoto
+
+		return
+	} else {
+		return
 	}
+
 	//log.Println("B :", origin.currentPage)
 	page := origin.currentPage - wv.BaseOneIndex
 	text := origin.collection.GetDef(page)

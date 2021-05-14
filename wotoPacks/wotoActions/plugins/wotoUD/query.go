@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoUD
 
 import (
@@ -8,6 +13,7 @@ import (
 type udQuery struct {
 	next     bool // true if it's the next button
 	previous bool // true if it's the previous button
+	voice    bool // true if it's the voice button
 	// sound    bool      // true if it's the voice button (TODO)
 	origin *udOrigin // the origin of the ud API.
 
@@ -40,6 +46,15 @@ func getNextUdQuery(origin *udOrigin) *udQuery {
 
 func getPreviousUdQuery(origin *udOrigin) *udQuery {
 	return getUdQuery(origin, false)
+}
+
+func getVoiceUdQuery(origin *udOrigin) *udQuery {
+	return &udQuery{
+		next:     false,
+		previous: false,
+		voice:    true,
+		origin:   origin,
+	}
 }
 
 func getUdQuery(orig *udOrigin, next bool) *udQuery {

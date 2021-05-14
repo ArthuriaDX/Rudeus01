@@ -14,15 +14,15 @@ import (
 
 func (n *NekoBase) IsPhoto() bool {
 	tmp := strings.ToLower(n.Url)
-	b1 := strings.HasSuffix(tmp, jpg)
-	b2 := strings.HasSuffix(tmp, jpeg)
-	b3 := strings.HasSuffix(tmp, png)
+	b1 := strings.HasSuffix(tmp, wv.Jpg)
+	b2 := strings.HasSuffix(tmp, wv.Jpeg)
+	b3 := strings.HasSuffix(tmp, wv.Png)
 	return b1 || b2 || b3
 }
 
 func (n *NekoBase) IsGif() bool {
 	tmp := strings.ToLower(n.Url)
-	return strings.HasSuffix(tmp, gif)
+	return strings.HasSuffix(tmp, wv.Gif)
 }
 
 func (n *NekoBase) IsText() bool {

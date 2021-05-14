@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoUD
 
 import (
@@ -14,7 +19,6 @@ import (
 )
 
 const (
-	qStr         = "q"
 	unsignedStr1 = "\\u003cb\\u003e"
 	unsignedStr2 = "\\u003c\\/b\\u003e"
 	// unsignedStrs3 = "\u003c" don't use them separately
@@ -70,10 +74,8 @@ func getURL(word string) string {
 // parseGoogleData will fix the google data.
 func parseGoogleData(gData []byte) []string {
 	gStr := string(gData)
-	//log.Println(gStr)
 	final := wv.EMPTY
 	allStrs := make([]string, wv.BaseIndex)
-	//done := false
 	firstChild := false
 	secondChild := false
 	thirdChild := false
@@ -101,13 +103,10 @@ func parseGoogleData(gData []byte) []string {
 	gStr = strings.ReplaceAll(gStr, unsignedStr2, wv.EMPTY)
 
 	for _, current := range gStr {
-
 		// CHAR_S7  = '['
 		if current != wotoMD.CHAR_S7 {
-
 			// CHAR_STR = "\""
 			if current == wv.CHAR_STR {
-
 				// ensure that we are in correct time line, Steins;Gate.
 				if !thirdChild {
 					// Forbidden!
@@ -132,7 +131,6 @@ func parseGoogleData(gData []byte) []string {
 
 			// CHAR_S8  = ']'
 			if current == wotoMD.CHAR_S8 {
-
 				// ensure that we have already passed the first child.
 				// actually I don't know what the hell are these characters
 				// at the first of recieved data from google: )]}'.
@@ -198,7 +196,6 @@ func parseGoogleData(gData []byte) []string {
 
 			continue
 		} else {
-
 			// check if it's our first child or not.
 			if !firstChild {
 				firstChild = true

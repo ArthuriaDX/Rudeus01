@@ -37,6 +37,7 @@ func cmdListInit() {
 	addPatCmdList()
 	addNekosLifeCmdList()
 	addUdCmdList()
+	addWpCmdList()
 }
 
 func addMorseCmdList() {
@@ -53,10 +54,10 @@ func addMorseCmdList() {
 func addTrCmdList() {
 	if cmdList != nil {
 		if cmdList[TrCmd] == nil {
-			cmdList[TrCmd] = fromMorseHandler
+			cmdList[TrCmd] = trHandler
 		}
 		if cmdList[TranslateCmd] == nil {
-			cmdList[TranslateCmd] = fromMorseHandler
+			cmdList[TranslateCmd] = trHandler
 		}
 	}
 }
@@ -175,4 +176,9 @@ func addUdCmdList() {
 			cmdList[defineCmd] = udHandler
 		}
 	}
+}
+
+// TODO
+func addWpCmdList() {
+	// TODO
 }

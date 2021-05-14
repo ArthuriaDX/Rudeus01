@@ -1,3 +1,8 @@
+// Rudeus Telegram Bot Project
+// Copyright (C) 2021 wotoTeam, ALiwoto
+// This file is subject to the terms and conditions defined in
+// file 'LICENSE', which is part of the source code.
+
 package wotoUD
 
 import wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
@@ -29,12 +34,21 @@ const (
 
 // the constants used for interact with users.
 const (
-	nextText = "next page"     // the next button Text
-	preText  = "previous page" // the previous button Text
-	footnote = "\n\n-----------------------\nPage " +
+	nextText  = "next page"     // the next button Text
+	preText   = "previous page" // the previous button Text
+	voiceText = "send voice"    // the voice button text
+	footnote  = "\n\n-----------------------\nPage " +
 		wv.FORMAT_VALUE + " of " + wv.FORMAT_VALUE
+	voiceCap = "Voices for \"" + wv.FORMAT_VALUE +
+		"\" are available:"
+	checkPv       = "Uwu~ check your pv!"
+	sentPv        = "Uwu~ voices have been sent!"
+	voiceStr      = "voice"
 	listNAvailble = "list is not available anymore."
 	notAllowed    = "Owo ~ You are not allowed to use this button!"
+	noVoices      = "Onii-chan!! This page has no voices it seems! (>-<)"
+	startVoice    = "Before I send you the voice, start me! ^-^"
+	exampleStr    = "✧✧Examples:"
 	notFound      = "Senpai! >.< I couldn't find \"" +
 		wv.FORMAT_VALUE + "\" at all~~\n"
 	simNotice = "✧But take a look at these similarities >-<: \n"

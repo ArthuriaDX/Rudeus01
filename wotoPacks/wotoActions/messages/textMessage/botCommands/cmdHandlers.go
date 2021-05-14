@@ -10,6 +10,7 @@ import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoMorse"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoNeko"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoPat"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoTranslate"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoUD"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -20,6 +21,10 @@ func toMorseHandler(message *tg.Message, args pTools.Arg) {
 
 func fromMorseHandler(message *tg.Message, args pTools.Arg) {
 	wotoMorse.FromMorseHandler(message, args)
+}
+
+func trHandler(message *tg.Message, args pTools.Arg) {
+	wotoTranslate.TrHandler(message, args)
 }
 
 func patHandler(message *tg.Message, args pTools.Arg) {

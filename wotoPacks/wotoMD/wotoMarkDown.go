@@ -40,6 +40,14 @@ func GetMono(value string) interfaces.WMarkDown {
 	return toWotoMD(final)
 }
 
+func GetHyperLink(text string, url string) interfaces.WMarkDown {
+	fText := repairValue(text)
+	fUrl := repairValue(url)
+	final := string(CHAR_S7) + fText + string(CHAR_S8) +
+		string(CHAR_S9) + fUrl + string(CHAR_S10)
+	return toWotoMD(final)
+}
+
 // GetUserMention will give you a mentioning style username with the
 // specified text.
 // WARNING: you don't need to repair text before sending it as first arg,

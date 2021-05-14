@@ -27,10 +27,6 @@ const (
 	patJs       = "js/pats.json"
 	img         = hostUrl + "/img/"
 	owo         = hostUrl + slash + OwoText + "?text="
-	jpg         = ".jpg"
-	jpeg        = ".jpeg"
-	gif         = ".gif"
-	png         = ".png"
 )
 
 // headp.at headers values.
