@@ -13,10 +13,6 @@ import (
 )
 
 func TrHandler(message *tg.Message, args pTools.Arg) {
-
-}
-
-func ToMorseHandler(message *tg.Message, args pTools.Arg) {
 	// set the first element of args to empty,
 	// because pTools.Arg also contains the command itself,
 	// however we don't want that here.
