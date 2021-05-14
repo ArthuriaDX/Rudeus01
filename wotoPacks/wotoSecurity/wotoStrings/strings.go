@@ -15,29 +15,25 @@ func Split(_s string, separator ...string) []string {
 	if len(separator) == wv.BaseIndex {
 		return nil
 	}
-	_firstSet := false
-	var (
-		_shallow   string
-		_myStrings []string
-	)
-	for _, _current := range separator {
-		if strings.Contains(_s, _current) {
-			if !_firstSet {
-				_myStrings = strings.Split(_s, _current)
-				_myStrings = FixSplit(_myStrings)
-				_firstSet = true
-				continue
-			}
-			_shallow = strings.Join(_myStrings, wv.EMPTY)
-			_myStrings = strings.Split(_shallow, _current)
-			_myStrings = FixSplit(_myStrings)
-		}
+
+	final := _s
+	for _, myStr := range separator {
+		final = strings.ReplaceAll(final, myStr, sepStr)
 	}
-	if !_firstSet {
-		_myStrings = make([]string, wv.BaseIndex)
-		_myStrings[wv.BaseIndex] = _s
+	return FixSplit(strings.Split(final, sepStr))
+}
+
+func SplitSlice(_s string, separator []string) []string {
+	if len(separator) == wv.BaseIndex {
+		return nil
 	}
-	return _myStrings
+
+	final := _s
+	for _, myStr := range separator {
+		final = strings.ReplaceAll(final, myStr, sepStr)
+	}
+
+	return FixSplit(strings.Split(final, sepStr))
 }
 
 // FixSplit will fix the bullshit bug in the

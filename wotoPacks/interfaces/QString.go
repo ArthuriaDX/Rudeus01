@@ -11,4 +11,6 @@ type QString interface {
 	GetValue() string
 	GetIndexV(_index int) rune
 	IsEqual(_strong QString) bool
+	Split(...QString) []QString
+	SplitStr(...string) []QString
 }

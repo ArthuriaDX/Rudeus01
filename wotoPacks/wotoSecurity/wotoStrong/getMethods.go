@@ -9,7 +9,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
+	tf "github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
 
@@ -30,7 +31,7 @@ func (_s *StrongString) IsEmpty() bool {
 
 // isEqual will check if the passed-by-value in the arg is equal to this
 // StrongString or not.
-func (_s *StrongString) IsEqual(_q interfaces.QString) bool {
+func (_s *StrongString) IsEqual(_q tf.QString) bool {
 	if reflect.TypeOf(_q) != reflect.TypeOf(_s) {
 		return _q.GetValue() == _s.GetValue()
 	}
@@ -125,4 +126,18 @@ func (_s *StrongString) HasPrefixes(values ...string) bool {
 	}
 
 	return true
+}
+
+func (_s *StrongString) Split(qs ...tf.QString) []tf.QString {
+	strs := wotoStrings.SplitSlice(_s.GetValue(), ToStrSlice(qs))
+	return ToQSlice(strs)
+}
+
+func (_s *StrongString) SplitStr(qs ...string) []tf.QString {
+	strs := wotoStrings.SplitSlice(_s.GetValue(), qs)
+	return ToQSlice(strs)
+}
+
+func (_s *StrongString) ToQString() tf.QString {
+	return _s
 }

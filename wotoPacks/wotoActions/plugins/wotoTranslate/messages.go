@@ -7,7 +7,5 @@ package wotoTranslate
 
 // the messages for wotoMorse plugin.
 const (
-	TO_BINARY_M  = "Converted to Binary:\n"
-	TO_MORSE_M   = "Converted to Morse:\n"
-	FROM_MORSE_M = "Converted from Morse:\n"
+	translatedText = "Translated:\n"
 )
