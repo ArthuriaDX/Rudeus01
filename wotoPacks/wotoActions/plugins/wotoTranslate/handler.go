@@ -18,8 +18,15 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 	args[wv.BaseIndex] = wv.EMPTY
 
 	send_pv := args.HasFlag(PV_FLAG, PRIVATE_FLAG)
-
+	flags := args.GetFlags()
 	is_reply := message.ReplyToMessage != nil
+
+	if len(flags) == wv.BaseIndex {
+		return
+	}
+
+	toLang := flags[wv.BaseIndex]
+
 	var full string
 	if is_reply {
 		if !ws.IsEmpty(&message.ReplyToMessage.Text) {
@@ -35,7 +42,17 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 		full = args.JoinNoneFlags(false)
 	}
 
-	trl := Translate("en", "ja", full)
+	l1 := DetectLanguage(full)
+	if l1 == nil {
+		return
+	}
+
+	cl := l1.Data.Detections
+	if len(cl) == wv.BaseIndex {
+		return
+	}
+
+	trl := Translate(cl[wv.BaseIndex].TheLang, toLang, full)
 
 	var str string
 	for _, current := range trl {
@@ -86,12 +103,15 @@ func sendTr(message *tg.Message, morse *string, reply, pv bool) {
 			msg.ReplyToMessageID = message.MessageID
 		}
 	}
-	msg.ParseMode = tg.ModeMarkdownV2
+
+	//msg.ParseMode = tg.ModeMarkdownV2
 	if _, err := api.Send(msg); err != nil {
 
 		log.Println(err)
 		tgErr := tgMessages.GetTgError(err)
-		tgErr.SendRandomErrorMessage(message)
+		if tgErr != nil {
+			tgErr.SendRandomErrorMessage(message)
+		}
 		return
 	}
 }

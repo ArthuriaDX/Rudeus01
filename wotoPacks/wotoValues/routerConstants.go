@@ -15,7 +15,18 @@ const (
 	FORMAT_VALUE = "%v"
 	SPACE_VALUE  = " "
 	N_ESCAPE     = "\n"
+	R_ESCAPE     = "\r"
 	SEMICOLON    = ";"
+	CAMA         = ","
+	ParaOpen     = "("
+	ParaClose    = ")"
+	NullStr      = "null"
+	DoubleQ      = "\""
+	DoubleQJ     = "”"
+	BracketOpen  = "["
+	Bracketclose = "]"
+	Star         = "*"
+	BackSlash    = "\\"
 )
 
 const TICK_INTERVAL = 25 * time.Second // seconds

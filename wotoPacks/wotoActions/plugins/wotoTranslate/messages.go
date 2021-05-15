@@ -7,5 +7,5 @@ package wotoTranslate
 
 // the messages for wotoMorse plugin.
 const (
-	translatedText = "Translated:\n"
+//translatedText = "Translated:\n"
 )

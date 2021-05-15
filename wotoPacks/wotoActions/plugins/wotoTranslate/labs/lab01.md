@@ -118,7 +118,7 @@ null,\"Ichi\",null,true,null,
 ### LEVEL06: 
 
 null,null,\"en\", (unknown01, unknown02, from)
-null,\"Ichi\",null,true,null,
+null,\"Ichi\",null,true,null, (unknown03, unknown04, unknown05, unknown06, )
 \"市\",
 \"市\",\"都市\",\"シティ\",\"都雅\",\"街\"
 \n,\"ja\",1,\"en\",

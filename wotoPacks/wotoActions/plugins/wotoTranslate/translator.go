@@ -66,46 +66,47 @@ func TrGnuTxt(fr, to, text string) string {
 }
 
 func parseGData(text string) []string {
-	test := ws.Split(text, "[", "]")
+	test := ws.Split(text, wv.BracketOpen, wv.Bracketclose)
 	original := make([]string, wv.BaseIndex)
 	accepted := func(v string) bool {
-		if v == "\\n" {
+		if v == NonEscapeN {
 			return false
 		}
-		if v == "\\n," {
+		if v == NonEscapeNV {
 			return false
 		}
-		if strings.Contains(v, "af.httprm") {
+		if strings.Contains(v, HttpRm) {
 			return false
 		}
-		if strings.Contains(v, "\"e\",4,") {
+		if strings.Contains(v, E4Value) {
 			return false
 		}
-		if strings.HasPrefix(v, "null,") {
-			tmpN := strings.ReplaceAll(v, "null,", wv.EMPTY)
+		if strings.HasPrefix(v, NullCValue) {
+			tmpN := strings.ReplaceAll(v, NullCValue, wv.EMPTY)
 			_, errN := strconv.Atoi(tmpN)
 			if errN == nil {
 				return false
 			}
 		}
-		if strings.HasPrefix(v, "\"di\"") {
+		if strings.HasPrefix(v, DiValue) {
 			return false
 		}
-		tmp := strings.ReplaceAll(v, " ", wv.EMPTY)
-		tmp = strings.ReplaceAll(tmp, ",", wv.EMPTY)
+		tmp := strings.ReplaceAll(v, wv.SPACE_VALUE, wv.EMPTY)
+		tmp = strings.ReplaceAll(tmp, wv.CAMA, wv.EMPTY)
 		if len(tmp) == wv.BaseIndex {
 			return false
 		}
-		if tmp == ")" || tmp == "}'" {
+		if tmp == wv.ParaClose || tmp == AkCloseQ {
 			return false
 		}
-		if !strings.Contains(tmp, "null") && !strings.Contains(tmp, "\"") {
+		if !strings.Contains(tmp, wv.NullStr) &&
+			!strings.Contains(tmp, wv.DoubleQ) {
 			return false
 		}
-		if strings.Contains(v, "\"wrb.fr\",\"MkEWBc\"") {
+		if strings.Contains(v, WrbFr) {
 			return false
 		}
-		tmp = strings.ReplaceAll(tmp, "\n", wv.EMPTY)
+		tmp = strings.ReplaceAll(tmp, wv.N_ESCAPE, wv.EMPTY)
 		_, errI := strconv.Atoi(tmp)
 		return errI != nil
 	}
@@ -116,153 +117,83 @@ func parseGData(text string) []string {
 		}
 	}
 
-	return original
+	return parseGparams(original)
 }
 
-func GetOpening(text string) string {
-	finalStr := wv.EMPTY
-	// ,[[\"
-	// \",[\"
-	c1 := false
-	c2 := false
-	c3 := false
-	c4 := false
-	after := false
+func parseGparams(value []string) []string {
+	//null,
+	//null,
+	// \"ja\"
+	// \n,null,
+	// null,\"Konnichiwa. Ohayou Minna\",null,null,null,
+	// \"konnichiwa。\",
+	// \"konnichiwa。\",\"こんにちは。\"
+	// \"Ohayou Minna\",
+	// \"Ohayou Minna\",\"みんなおはよう\"
+	// \n,\"ja\",1,\"en\",
+	// \"konnichiwa. ohayou minna \",\"en\",\"ja\",true
+	// \n",null,null,null,"generic"
+	tmp := strings.Join(value, wv.DY_WOTO_TEXT)
+	tmp = strings.ReplaceAll(tmp, NullN, wv.EMPTY)
+	tmp = strings.ReplaceAll(tmp, NullCValueR, wv.EMPTY)
+	tmp = strings.ReplaceAll(tmp, GenericStr, wv.EMPTY)
+	tmp = strings.ReplaceAll(tmp, NullCValue, wv.EMPTY)
+	tmp = strings.ReplaceAll(tmp, NeQ, wv.EMPTY)
+	strs := strings.Split(tmp, wv.DY_WOTO_TEXT)
+	final := make([]string, wv.BaseIndex)
+	strMap := make(map[string]bool)
+	lastStr := wv.EMPTY
+	for _, current := range strs {
+		tmp = current
+		if current == lastStr {
+			continue
+		}
+		if strings.HasPrefix(current, DoubleQS) {
+			current = strings.TrimPrefix(current, DoubleQS)
+		} else {
+			lastStr = wv.EMPTY
+			continue
+		}
 
-	cA1 := false
-	cA2 := false
-	cA3 := false
-	cA4 := false
-	cA5 := false
-	ended := false
-	invalidAll := func() {
-		if c1 {
-			c1 = false
+		if strings.Contains(current, MiddleWave) {
+			current = strings.Split(current, MiddleWave)[wv.BaseOneIndex]
 		}
-		if c2 {
-			c2 = false
+
+		if strings.HasSuffix(current, DoubleQSP) {
+			// optional
+			current = strings.TrimSuffix(current, DoubleQSP)
+
+			if strMap[current] {
+				continue
+			} else {
+				strMap[current] = true
+			}
+
+			final = append(final, current)
+			lastStr = tmp
+			continue
 		}
-		if c3 {
-			c3 = false
+
+		if strings.HasSuffix(current, DoubleQS) {
+			current = strings.TrimSuffix(current, DoubleQS)
+		} else {
+			lastStr = wv.EMPTY
+			continue
 		}
-		if c4 {
-			c4 = false
+
+		if strMap[current] {
+			continue
+		} else {
+			strMap[current] = true
 		}
+
+		lastStr = tmp
+		log.Println(current)
+		log.Println(strMap)
+		final = append(final, current)
 	}
-	invalidAfter := func() {
-		if cA1 {
-			cA1 = false
-		}
-		if cA2 {
-			cA2 = false
-		}
-		if cA3 {
-			cA3 = false
-		}
-		if cA4 {
-			cA4 = false
-		}
-		if cA5 {
-			cA5 = false
-		}
-	}
 
-	for _, ch := range text {
-		if after {
-			if ended {
-				finalStr += string(ch)
-				continue
-			}
-			if cA5 {
-				if ch == '"' {
-					ended = true
-				} else {
-					invalidAfter()
-				}
-				continue
-			}
-			if cA4 {
-				if ch == '\\' {
-					cA5 = true
-				} else {
-					invalidAfter()
-				}
-				continue
-			}
-			if cA3 {
-				if ch == '[' {
-					cA4 = true
-				} else {
-					invalidAfter()
-				}
-				continue
-			}
-			if cA2 {
-				if ch == ',' {
-					cA3 = true
-				} else {
-					invalidAfter()
-				}
-				continue
-			}
-			if cA1 {
-				if ch == '"' {
-					cA2 = true
-				} else {
-					invalidAfter()
-				}
-				continue
-			}
-
-			if ch == '\\' {
-				cA1 = true
-			}
-
-			continue
-		}
-
-		if c4 {
-			if ch == '"' {
-				after = true
-			} else {
-				invalidAll()
-			}
-			continue
-		}
-
-		if c3 {
-			if ch == '\\' {
-				c4 = true
-			} else {
-				invalidAll()
-			}
-			continue
-		}
-
-		if c2 {
-			if ch == '[' {
-				c3 = true
-			} else {
-				invalidAll()
-			}
-			continue
-		}
-
-		if c1 {
-			if ch == '[' {
-				c2 = true
-			} else {
-				invalidAll()
-			}
-			continue
-		}
-
-		if ch == ',' {
-			c1 = true
-			continue
-		}
-	}
-	return finalStr
+	return final
 }
 
 // trGAuto will translate the `text`
@@ -311,16 +242,24 @@ func trGoogle(fr, to, text string) string {
 }
 
 func purify(text string) string {
-	if strings.Contains(text, "[") {
-		text = strings.ReplaceAll(text, "[", "((((")
+	if strings.Contains(text, wv.BracketOpen) {
+		text = strings.ReplaceAll(text, wv.BracketOpen, wv.ParaOpen)
 	}
-	if strings.Contains(text, "]") {
-		text = strings.ReplaceAll(text, "]", "))))")
+	if strings.Contains(text, wv.Bracketclose) {
+		text = strings.ReplaceAll(text, wv.Bracketclose, wv.ParaClose)
 	}
-	if strings.Contains(text, "*") {
-		text = strings.ReplaceAll(text, "*", wv.EMPTY)
+	if strings.Contains(text, wv.Star) {
+		text = strings.ReplaceAll(text, wv.Star, wv.EMPTY)
 	}
-
+	if strings.Contains(text, wv.N_ESCAPE) {
+		text = strings.ReplaceAll(text, wv.N_ESCAPE, wv.SPACE_VALUE)
+	}
+	if strings.Contains(text, wv.R_ESCAPE) {
+		text = strings.ReplaceAll(text, wv.R_ESCAPE, wv.SPACE_VALUE)
+	}
+	if strings.Contains(text, wv.DoubleQ) {
+		text = strings.ReplaceAll(text, wv.DoubleQ, wv.DoubleQJ)
+	}
 	return text
 }
 
@@ -331,7 +270,7 @@ func googleFQ(fr, to, text string) string {
 	//return "f.req=%5B%5B%5B%22MkEWBc%22%2C%22%5B%5B%5C%22How%20are%20you%5C%22%2C%5C%22auto%5C%22%2C%5C%22fa%5C%22%2Ctrue%5D%2C%5Bnull%5D%5D%22%2Cnull%2C%22generic%22%5D%5D%5D&"
 	// [[["MkEWBc","[[\"Hello\",\"auto\",\"fa\",true],[null]]",null,"generic"]]]&
 	//return "[[[\"MkEWBc\", \"[[\"Hello\",\"auto\",\"fa\",true],[null]]\",null,\"generic\"]]]&\""
-	return fReqGValue1 + url.PathEscape(text) +
+	return fReqGValue1 + url.QueryEscape(text) +
 		fReqGValue2 + fr +
 		fReqGValue3 + to + fReqGValue4
 }

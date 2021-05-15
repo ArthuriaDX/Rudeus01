@@ -56,33 +56,39 @@ const (
 // google transtlate constants keys and values.
 const (
 	//-----------------------------------------------------
-	requestType = "POST"
+
+	requestType = "POST" // not optional
 	gHostUrl    = "https://translate.google.com/_/" +
 		"TranslateWebserverUi/data/" +
 		"batchexecute?rpcids=MkEWBc" +
 		"&f.sid=-6960075458768589634" +
 		"&bl=boq_translate-webserver_20210512.09_p0" +
 		"&hl=en-US&soc-app=1&soc-platform=1" +
-		"&soc-device=1&_reqid=1662330&rt=c"
+		"&soc-device=1&_reqid=1662330&rt=c" // not optional
+
 	//-----------------------------------------------------
-	userAgentGKey   = "User-Agent"
+
+	userAgentGKey   = "User-Agent" // not optional
 	userAgentGValue = "Mozilla/5.0 " +
 		"(X11; Ubuntu; Linux x86_64; rv:88.0) " +
-		"Gecko/20100101 Firefox/88.0"
+		"Gecko/20100101 Firefox/88.0" // not optional
+
 	//-----------------------------------------------------
-	acceptGKey   = "Accept"
-	acceptGValue = "*/*"
+
+	acceptGKey   = "Accept" // not optional
+	acceptGValue = "*/*"    // not optional
+
 	//-----------------------------------------------------
-	acceptLanguageGKey   = "Accept-Language"
-	acceptLanguageGValue = "en-US,en;q=0.5"
+	acceptLanguageGKey   = "Accept-Language" // not optional
+	acceptLanguageGValue = "en-US,en;q=0.5"  // not optional
 	//-----------------------------------------------------
-	refererGKey   = "Referer"
-	refererGValue = "https://translate.google.com/"
+	refererGKey   = "Referer"                       // not optional
+	refererGValue = "https://translate.google.com/" // not optional
 	//-----------------------------------------------------
-	xSameDomainGKey   = "X-Same-Domain"
-	xSameDomainGValue = "1"
+	xSameDomainGKey   = "X-Same-Domain" // not optional
+	xSameDomainGValue = "1"             // not optional
 	//-----------------------------------------------------
-	xGoogBatchExecuteBgrGKey   = "X-Goog-BatchExecute-Bgr"
+	xGoogBatchExecuteBgrGKey   = "X-Goog-BatchExecute-Bgr" // not optional
 	xGoogBatchExecuteBgrGValue = "[\"!uLulu_bNAAZ-n43Xfp9" +
 		"ChR5KyniU7RY7ACkAIwj8Rr5ZYBnKqvI3yOFfAcxDZqjGlJRAj7Wy" +
 		"DbSIHd2rmrWJCLwm1AIAAAJAUgAAADJoAQcKALcwYzzTEVUDx7SCQT" +
@@ -101,28 +107,29 @@ const (
 		"WtEhvpXGmJ6K9KdppK9n9VOQP9g2QXzfem3WIahR7a0AN_98Gtv_" +
 		"Df5tWUfMpyj6hSwSd_8ZdnLkTv5VNPy-R0eWmPIwrmQq00IzvGs42" +
 		"VYhrkPNvJhG4FuRdvebmsu63yRHjGX6zt9U_EJOehdii\"" +
-		",null,null,51,null,null,null,0]"
+		",null,null,51,null,null,null,0]" // not optional
 	//-----------------------------------------------------
-	contentTypeGKey   = "Content-Type"
-	contentTypeGValue = "application/x-www-form-urlencoded;charset=utf-8"
+	contentTypeGKey   = "Content-Type" // not optional
+	contentTypeGValue = "application/x-www-form-urlencoded;" +
+		"charset=utf-8" // not optional
 	//-----------------------------------------------------
-	originGKey   = "Origin"
-	originGValue = "https://translate.google.com"
+	originGKey   = "Origin"                       // not optional
+	originGValue = "https://translate.google.com" // not optional
 	//-----------------------------------------------------
-	gDNTGKey   = "DNT"
-	gDNTGValue = "1"
+	gDNTGKey   = "DNT" // not optional
+	gDNTGValue = "1"   // not optional
 	//-----------------------------------------------------
-	connectionGKey   = "Connection"
-	connectionGValue = "keep-alive"
+	connectionGKey   = "Connection" // not optional
+	connectionGValue = "keep-alive" // not optional
 	//-----------------------------------------------------
-	cookieGKey   = "Cookie"
+	cookieGKey   = "Cookie" // not optional
 	cookieGValue = "NID=215=loqde-FVPxqRXGmigy_" +
 		"yQSS8T9ElYCYG3hZYItUEtpIP2aoDaKQPVWLEt5x9" +
 		"jlB3Rju7OOztJe1vN4TCYuYz996AdeYk3GuGiXFBg" +
 		"B3jJ1y3bvWzTi3EkSXfsAjXgaI0IY4o56gTgT20QOa" +
-		"I-8akMGD40bZeaN5LTnPEaAksP98; OTZ=5978478_56_56__56_"
+		"I-8akMGD40bZeaN5LTnPEaAksP98; OTZ=5978478_56_56__56_" // not optional
 	//-----------------------------------------------------
-	fReqGKey = "f.req="
+	fReqGKey = "f.req=" // not optional
 	// GValue1 + (TEXT(urlencoded)) + GValue2 + (auto) +
 	// GValue3 + (en) + GValue4
 	fReqGValue1 = fReqGKey + "%5B%5B%5B%22MkEWBc%22%2C%22%5B%5B%5C%22"
@@ -130,10 +137,26 @@ const (
 	fReqGValue3 = "%5C%22%2C%5C%22"
 	fReqGValue4 = "%5C%22%2Ctrue%5D%2C%5Bnull" +
 		"%5D%5D%22%2Cnull%2C%22generic%22%5D%5D%5D&"
-	//-----------------------------------------------------
-	// %5B%5B%5B%22MkEWBc%22%2C%22%5B%5B%5C%22I%20am%20okay%5C%22%2C%5C%22auto%5C%22%2C%5C%22fa%5C%22%2Ctrue%5D%2C%5Bnull%5D%5D%22%2Cnull%2C%22generic%22%5D%5D%5D&
-	//-----------------------------------------------------
-	//-----------------------------------------------------
+)
+
+const (
+	DoubleQS    = wv.BackSlash + wv.DoubleQ
+	DoubleQSP   = DoubleQS + wv.CAMA
+	NonEscapeN  = "\\n"
+	NonEscapeNV = NonEscapeN + wv.CAMA
+	HttpRm      = "af.httprm"
+	E4Value     = "\"e\"" + wv.CAMA + "4" + wv.CAMA
+	NullCValue  = wv.NullStr + wv.CAMA
+	GenericStr  = wv.CAMA + "\"generic\""
+	NullCValueR = wv.CAMA + wv.NullStr
+	NeQ         = "\\n\""
+	NullN       = "\n\"" + wv.CAMA + "null"
+	DiValue     = "\"di\""
+	AkCloseQ    = "}'"
+	WrbFr       = "\"wrb.fr\",\"MkEWBc\""
+	BoldOpen    = "\\u003cb\\u003e"
+	BoldClose   = "\\u003c/b\\u003e"
+	MiddleWave  = DoubleQSP + DoubleQS
 )
 
 const (

@@ -41,8 +41,8 @@ func HandleCommand(message *tg.Message) {
 	texts := strings.Split(text, wv.SPACE_VALUE)
 	//log.Println("before event : ", texts)
 	//log.Println(texts[wotoValues.BaseIndex])
-	event := cmdList[texts[wv.BaseIndex]]
-	if event != nil {
+	event, ok := cmdList[texts[wv.BaseIndex]]
+	if event != nil && ok {
 		event(message, texts)
 	}
 }

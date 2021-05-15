@@ -23,7 +23,7 @@ import (
 
 func main() {
 	//str := wotoTranslate.DetectLanguage("hello!")
-	//str := wotoTranslate.Translate("")
+	//str := wotoTranslate.Translate("en", "ja", "Hello, how are you?")
 	//log.Println(str)
 
 	port := os.Getenv(wv.APP_PORT)
