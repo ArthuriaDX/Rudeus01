@@ -14,7 +14,6 @@ import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoTranslate"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/wotoChilds"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
@@ -23,8 +22,9 @@ import (
 )
 
 func main() {
-	str := wotoTranslate.DetectLanguage("hello!")
-	log.Println(str)
+	//str := wotoTranslate.DetectLanguage("hello!")
+	//str := wotoTranslate.Translate("")
+	//log.Println(str)
 
 	port := os.Getenv(wv.APP_PORT)
 	if ws.IsEmpty(&port) {

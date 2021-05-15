@@ -13,3 +13,11 @@ type LangDetect struct {
 	Reliable   bool    `json:"isReliable"`
 	Confidence float32 `json:"confidence"`
 }
+
+type GoogleTr struct {
+}
+
+type gnuTranslate struct {
+	Result string `json:"result"`
+	Err    string `json:"error"`
+}

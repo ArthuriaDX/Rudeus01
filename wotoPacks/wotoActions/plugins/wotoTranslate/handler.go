@@ -5,7 +5,6 @@ import (
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/pTools"
-	"github.com/ALiwoto/rudeus01/wotoPacks/wotoMD"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues/tgMessages"
@@ -21,7 +20,7 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 	send_pv := args.HasFlag(PV_FLAG, PRIVATE_FLAG)
 
 	is_reply := message.ReplyToMessage != nil
-	var full, trl string
+	var full string
 	if is_reply {
 		if !ws.IsEmpty(&message.ReplyToMessage.Text) {
 			full = message.ReplyToMessage.Text
@@ -36,15 +35,11 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 		full = args.JoinNoneFlags(false)
 	}
 
-	trl = Translate(full)
+	trl := Translate("en", "ja", full)
 
 	var str string
-	if !ws.IsEmpty(&trl) {
-		md1 := wotoMD.GetBold(translatedText)
-		md2 := wotoMD.GetNormal(trl)
-		str = md1.Append(md2).ToString()
-	} else {
-		return
+	for _, current := range trl {
+		str += current + "\n"
 	}
 	sendTr(message, &str, is_reply, send_pv)
 }
