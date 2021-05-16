@@ -21,3 +21,13 @@ type gnuTranslate struct {
 	Result string `json:"result"`
 	Err    string `json:"error"`
 }
+
+type WotoTr struct {
+	OriginalText   string
+	TranslatedText string
+	From           string
+	To             string
+	CorrectedValue string
+	HasWrongNess   bool
+	Road           map[int]bool
+}

@@ -23,15 +23,19 @@ import (
 
 // Translate will translate the specified text value
 // tp english.
-func Translate(fr, to, text string) []string {
+func Translate(fr, to, text string) *WotoTr {
 	if ws.IsEmpty(&text) {
 		return nil
 	}
 
 	text = trGoogle(fr, to, text)
-	s := parseGData(text)
+	w := WotoTr{
+		OriginalText: text,
+		From:         fr,
+		To:           to,
+	}
 
-	return s
+	return parseGData(&w)
 }
 
 func TrGnuTxt(fr, to, text string) string {
@@ -65,7 +69,8 @@ func TrGnuTxt(fr, to, text string) string {
 	return g.Result
 }
 
-func parseGData(text string) []string {
+func parseGData(wTr *WotoTr) *WotoTr {
+	text := wTr.OriginalText
 	test := ws.Split(text, wv.BracketOpen, wv.Bracketclose)
 	original := make([]string, wv.BaseIndex)
 	accepted := func(v string) bool {
@@ -117,10 +122,12 @@ func parseGData(text string) []string {
 		}
 	}
 
-	return parseGparams(original)
+	strs := parseGparams(original, wTr)
+
+	return arrangeParams(strs, wTr)
 }
 
-func parseGparams(value []string) []string {
+func parseGparams(value []string, wTr *WotoTr) []string {
 	//null,
 	//null,
 	// \"ja\"
@@ -133,6 +140,21 @@ func parseGparams(value []string) []string {
 	// \n,\"ja\",1,\"en\",
 	// \"konnichiwa. ohayou minna \",\"en\",\"ja\",true
 	// \n",null,null,null,"generic"
+	if wTr.Road == nil {
+		wTr.Road = make(map[int]bool)
+	}
+
+	index := wv.BaseIndex
+
+	for _, c := range wTr.OriginalText {
+		if string(c) == wv.N_ESCAPE {
+			wTr.Road[index] = false
+		}
+		if string(c) == wv.Point {
+			wTr.Road[index] = true
+		}
+		index++
+	}
 	tmp := strings.Join(value, wv.DY_WOTO_TEXT)
 	tmp = strings.ReplaceAll(tmp, NullN, wv.EMPTY)
 	tmp = strings.ReplaceAll(tmp, NullCValueR, wv.EMPTY)
@@ -194,6 +216,32 @@ func parseGparams(value []string) []string {
 	}
 
 	return final
+}
+
+func arrangeParams(values []string, wTr *WotoTr) *WotoTr {
+	index := wv.BaseIndex
+	for _, current := range values {
+		if strings.Contains(current, WrongNessOpen) {
+			wTr.HasWrongNess = true
+			current = strings.ReplaceAll(current, WrongNessOpen, wv.EMPTY)
+			current = strings.ReplaceAll(current, WrongNessClose, wv.EMPTY)
+			current = strings.TrimPrefix(current, wv.BackSlash)
+			wTr.CorrectedValue = current
+		} else {
+			if wTr.Road != nil {
+				if !wTr.Road[index] {
+					current += wv.N_ESCAPE
+				} else {
+					current = strings.TrimPrefix(current, wv.N_ESCAPE)
+					current = strings.TrimSuffix(current, wv.N_ESCAPE)
+				}
+			}
+			wTr.TranslatedText += current
+		}
+	}
+	// TODO!
+	//wTr.TranslatedText = strings.Join(values, wv.N_ESCAPE)
+	return wTr
 }
 
 // trGAuto will translate the `text`

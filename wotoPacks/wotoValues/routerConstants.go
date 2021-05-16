@@ -27,6 +27,7 @@ const (
 	Bracketclose = "]"
 	Star         = "*"
 	BackSlash    = "\\"
+	Point        = "."
 )
 
 const TICK_INTERVAL = 25 * time.Second // seconds

@@ -140,23 +140,25 @@ const (
 )
 
 const (
-	DoubleQS    = wv.BackSlash + wv.DoubleQ
-	DoubleQSP   = DoubleQS + wv.CAMA
-	NonEscapeN  = "\\n"
-	NonEscapeNV = NonEscapeN + wv.CAMA
-	HttpRm      = "af.httprm"
-	E4Value     = "\"e\"" + wv.CAMA + "4" + wv.CAMA
-	NullCValue  = wv.NullStr + wv.CAMA
-	GenericStr  = wv.CAMA + "\"generic\""
-	NullCValueR = wv.CAMA + wv.NullStr
-	NeQ         = "\\n\""
-	NullN       = "\n\"" + wv.CAMA + "null"
-	DiValue     = "\"di\""
-	AkCloseQ    = "}'"
-	WrbFr       = "\"wrb.fr\",\"MkEWBc\""
-	BoldOpen    = "\\u003cb\\u003e"
-	BoldClose   = "\\u003c/b\\u003e"
-	MiddleWave  = DoubleQSP + DoubleQS
+	DoubleQS       = wv.BackSlash + wv.DoubleQ
+	DoubleQSP      = DoubleQS + wv.CAMA
+	NonEscapeN     = "\\n"
+	NonEscapeNV    = NonEscapeN + wv.CAMA
+	HttpRm         = "af.httprm"
+	E4Value        = "\"e\"" + wv.CAMA + "4" + wv.CAMA
+	NullCValue     = wv.NullStr + wv.CAMA
+	GenericStr     = wv.CAMA + "\"generic\""
+	NullCValueR    = wv.CAMA + wv.NullStr
+	NeQ            = "\\n\""
+	NullN          = "\n\"" + wv.CAMA + "null"
+	DiValue        = "\"di\""
+	AkCloseQ       = "}'"
+	WrbFr          = "\"wrb.fr\",\"MkEWBc\""
+	BoldOpen       = "\\u003cb\\u003e"
+	BoldClose      = "\\u003c/b\\u003e"
+	MiddleWave     = DoubleQSP + DoubleQS
+	WrongNessOpen  = "\\u003cb\\\\u003e\\\\u003ci\\\\u003e"
+	WrongNessClose = "\\\\u003c/i\\\\u003e\\\\u003c/b\\\\u003e"
 )
 
 const (

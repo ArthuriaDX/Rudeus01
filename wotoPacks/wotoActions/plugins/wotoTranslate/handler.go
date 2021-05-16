@@ -52,12 +52,13 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 		return
 	}
 
-	trl := Translate(cl[wv.BaseIndex].TheLang, toLang, full)
-
 	var str string
-	for _, current := range trl {
-		str += current + "\n"
+
+	trl := Translate(cl[wv.BaseIndex].TheLang, toLang, full)
+	if trl.HasWrongNess {
+		str += "Translated \"" + trl.CorrectedValue + "\" instead.\n"
 	}
+	str += trl.TranslatedText
 	sendTr(message, &str, is_reply, send_pv)
 }
 
