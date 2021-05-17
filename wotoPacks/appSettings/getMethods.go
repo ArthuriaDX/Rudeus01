@@ -8,7 +8,6 @@ package appSettings
 import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -22,14 +21,6 @@ func (_s *AppSettings) IsGlobal() bool {
 
 func (_s *AppSettings) GetObt() string {
 	return _s.tObt
-}
-
-func (_s *AppSettings) GetPort() string {
-	return _s.port
-}
-
-func (_s *AppSettings) GetRouter() *gin.Engine {
-	return _s.router
 }
 
 // GetIndex will give you the index of the current child.

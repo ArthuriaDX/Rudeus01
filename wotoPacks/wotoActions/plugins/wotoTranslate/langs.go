@@ -1,7 +1,7 @@
 package wotoTranslate
 
 type Lang struct {
-	Data LangData `json:"data"`
+	Data *LangData `json:"data"`
 }
 
 type LangData struct {
@@ -29,5 +29,6 @@ type WotoTr struct {
 	To             string
 	CorrectedValue string
 	HasWrongNess   bool
+	WrongFrom      bool
 	Road           map[int]bool
 }

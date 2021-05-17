@@ -45,7 +45,7 @@ func runOnce(_bot *tgbotapi.BotAPI, _settings interfaces.WSettings) {
 	// Start polling Telegram for updates.
 	updates := _bot.GetUpdatesChan(updateConfig)
 
-	// Let's go through each update that we're getting from Telegram.
+	// go through each update that we're getting from Telegram.
 	for update := range updates {
 		// check if the current application is allowed to handle the update
 		// request or not.

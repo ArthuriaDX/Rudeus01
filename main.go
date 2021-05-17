@@ -7,7 +7,6 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"os"
 	"time"
 
@@ -18,42 +17,30 @@ import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/wotoDB"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	//str := wotoTranslate.DetectLanguage("hello!")
-	//str := wotoTranslate.Translate("en", "ja", "Hello, how are you?")
-	//log.Println(str)
-
-	port := os.Getenv(wv.APP_PORT)
-	if ws.IsEmpty(&port) {
-		log.Fatal(wv.PORT_ERROR)
-	}
-	settings := appSettings.GetSettings(port)
+	settings := appSettings.GetSettings()
 	runApp(settings)
 }
 
 func runApp(_settings interfaces.WSettings) {
-	router := _settings.GetRouter()
-	router.Use(gin.Logger())
-	router.GET(wv.GET_SLASH, answerClient)
-	_ = router.Run(wv.HTTP_ADDRESS + _settings.GetPort())
+	answerClient()
 }
 
-func answerClient(c *gin.Context) {
+func answerClient() {
 	if !appSettings.IsRunning() {
-		go c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.BaseTen)
+		//go c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.BaseTen)
 		appSettings.App_enter()
 	} else {
 		_s := appSettings.GetExisting()
 		_s.RunNext()
 		_s.SetObt(wotoChilds.WObtainTC)
 		if !_s.InvalidateAPI() {
-			c.String(http.StatusForbidden, wv.FORMAT_VALUE, wv.INVALID_ENGINE)
+			//c.String(http.StatusForbidden, wv.FORMAT_VALUE, wv.INVALID_ENGINE)
 			log.Fatal(wv.INVALID_ENGINE)
 		}
-		c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.ALREADY_RUNNING)
+		//c.String(http.StatusAccepted, wv.FORMAT_VALUE, wv.ALREADY_RUNNING)
 		return
 	}
 	wv.DebugMode = true
@@ -66,7 +53,7 @@ func answerClient(c *gin.Context) {
 	_settings.SetObt(wotoChilds.WObtainTC)
 	_settings.SetNextChild(wotoChilds.RunNextChild)
 	if !_settings.InvalidateAPI() {
-		c.String(http.StatusForbidden, wv.FORMAT_VALUE, wv.INVALID_ENGINE)
+		//c.String(http.StatusForbidden, wv.FORMAT_VALUE, wv.INVALID_ENGINE)
 		log.Println(wv.INVALID_ENGINE)
 		os.Exit(wv.BaseIndex)
 	}

@@ -23,19 +23,31 @@ import (
 
 // Translate will translate the specified text value
 // tp english.
-func Translate(fr, to, text string) *WotoTr {
-	if ws.IsEmpty(&text) {
+func Translate(lang *Lang, to, text string) *WotoTr {
+	if ws.IsEmpty(&text) || lang == nil {
 		return nil
 	}
 
-	text = trGoogle(fr, to, text)
+	if lang.Data == nil {
+		return nil
+	}
+
+	if len(lang.Data.Detections) == wv.BaseIndex {
+		return nil
+	}
+
+	l1 := lang.Data.Detections[wv.BaseIndex]
+
+	text = trGoogle(l1.TheLang, to, text)
 	w := WotoTr{
 		OriginalText: text,
-		From:         fr,
+		From:         l1.TheLang,
 		To:           to,
 	}
 
-	return parseGData(&w)
+	parseGData(&w)
+
+	return &w
 }
 
 func TrGnuTxt(fr, to, text string) string {
@@ -69,7 +81,7 @@ func TrGnuTxt(fr, to, text string) string {
 	return g.Result
 }
 
-func parseGData(wTr *WotoTr) *WotoTr {
+func parseGData(wTr *WotoTr) {
 	text := wTr.OriginalText
 	test := ws.Split(text, wv.BracketOpen, wv.Bracketclose)
 	original := make([]string, wv.BaseIndex)
@@ -124,7 +136,7 @@ func parseGData(wTr *WotoTr) *WotoTr {
 
 	strs := parseGparams(original, wTr)
 
-	return arrangeParams(strs, wTr)
+	arrangeParams(strs, wTr)
 }
 
 func parseGparams(value []string, wTr *WotoTr) []string {
@@ -221,11 +233,15 @@ func parseGparams(value []string, wTr *WotoTr) []string {
 func arrangeParams(values []string, wTr *WotoTr) *WotoTr {
 	index := wv.BaseIndex
 	for _, current := range values {
+		//if i == wv.BaseIndex {
+		// TODO
+		//}
 		if strings.Contains(current, WrongNessOpen) {
 			wTr.HasWrongNess = true
 			current = strings.ReplaceAll(current, WrongNessOpen, wv.EMPTY)
 			current = strings.ReplaceAll(current, WrongNessClose, wv.EMPTY)
 			current = strings.TrimPrefix(current, wv.BackSlash)
+			current = strings.ReplaceAll(current, wv.BackSlash, wv.EMPTY)
 			wTr.CorrectedValue = current
 		} else {
 			if wTr.Road != nil {

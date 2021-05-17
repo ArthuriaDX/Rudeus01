@@ -7,7 +7,6 @@ package appSettings
 
 import (
 	"github.com/ALiwoto/rudeus01/wotoPacks/interfaces"
-	"github.com/gin-gonic/gin"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -19,26 +18,22 @@ type AppSettings struct {
 	totalIndex int
 	isGlobal   bool
 	tObt       string
-	port       string
 	url        string
 	nextUrl    string
 	sudoList   []int64
 	mainSudo   int64
 	wClient    interfaces.WClient
 	patClient  interfaces.WClient
-	router     *gin.Engine
 	botAPI     *tgbotapi.BotAPI
 	_apiObtain func(interfaces.WSettings) bool
 	_nextChild func(string, interfaces.WSettings)
 }
 
-func GetSettings(_port string) interfaces.WSettings {
+func GetSettings() interfaces.WSettings {
 	if _settings != nil {
 		return GetExisting()
 	}
 	settings := AppSettings{}
-	settings._setPort(&_port)
-	settings._setRouter()
 	_settings = &settings
 	return _settings
 }

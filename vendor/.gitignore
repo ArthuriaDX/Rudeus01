@@ -1,7 +1,7 @@
 # ignore file
 *.md
 *.go.in
-/github.com
+#/github.com
 /golang.org
 /gopkg.in
 /go.mongodb.org

@@ -457,6 +457,7 @@ func (bot *BotAPI) GetWebhookInfo() (WebhookInfo, error) {
 
 // GetUpdatesChan starts and returns a channel for getting updates.
 func (bot *BotAPI) GetUpdatesChan(config UpdateConfig) UpdatesChannel {
+	var try int
 	ch := make(chan Update, bot.Buffer)
 
 	go func() {
@@ -470,6 +471,14 @@ func (bot *BotAPI) GetUpdatesChan(config UpdateConfig) UpdatesChannel {
 
 			updates, err := bot.GetUpdates(config)
 			if err != nil {
+				if strings.Contains(err.Error(), "make sure that only one bot instance is running") {
+					if try >= 4 {
+						log.Println("Failed after 3 tries:", err)
+						close(ch)
+						os.Exit(0x0085)
+						return
+					}
+				}
 				log.Println(err)
 				log.Println("Failed to get updates, retrying in 3 seconds...")
 				time.Sleep(time.Second * 3)
@@ -596,6 +605,7 @@ func (bot *BotAPI) GetChatMembersCount(config ChatMemberCountConfig) (int, error
 	}
 
 	var count int
+
 	err = json.Unmarshal(resp.Result, &count)
 
 	return count, err

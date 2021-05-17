@@ -7,7 +7,6 @@ package interfaces
 
 import (
 	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
-	"github.com/gin-gonic/gin"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -23,8 +22,6 @@ type WSettings interface {
 	GetAPI() *tg.BotAPI
 	IsGlobal() bool
 	GetObt() string
-	GetPort() string
-	GetRouter() *gin.Engine
 	GetIndex() int
 	GetTotalIndex() int
 	GetSudoList() []int64

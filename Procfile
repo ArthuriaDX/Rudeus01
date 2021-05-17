@@ -1,1 +1,1 @@
-web: bin/rudeus01
+worker: bin/rudeus01

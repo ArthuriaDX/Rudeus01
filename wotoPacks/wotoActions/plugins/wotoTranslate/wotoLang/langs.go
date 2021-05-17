@@ -1,5 +1,9 @@
 package wotoLang
 
+import (
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
+)
+
 type Language string
 
 var langList map[string]string
@@ -245,4 +249,17 @@ func initLangReseve() {
 			langListR[v] = k
 		}
 	}
+}
+
+func IsLang(value string) bool {
+	l := len(value)
+	if l <= wotoValues.BaseOneIndex || l > len(L_zh_CN) {
+		return false
+	}
+	initLang()
+	if len(langList[value]) == wotoValues.BaseIndex {
+		return false
+	}
+
+	return true
 }

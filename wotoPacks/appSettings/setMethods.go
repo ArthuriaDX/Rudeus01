@@ -14,7 +14,6 @@ import (
 	wa "github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/common"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
-	"github.com/gin-gonic/gin"
 	tg "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
@@ -101,12 +100,4 @@ func (_s *AppSettings) RemSudo(id int64) wa.RESULT {
 
 func (_s *AppSettings) SetWClient(_client interfaces.WClient) {
 	_s.wClient = _client
-}
-
-func (_s *AppSettings) _setPort(_port *string) {
-	_s.port = *_port
-}
-
-func (_s *AppSettings) _setRouter() {
-	_s.router = gin.New()
 }
