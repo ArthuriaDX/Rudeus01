@@ -75,6 +75,7 @@ func tickChecker() {
 	for {
 		time.Sleep(wv.TICK_INTERVAL)
 		if !wotoChilds.WObtainTC(_s) {
+			_s.RunNext()
 			log.Fatal(wv.INVALID_ENGINE)
 		}
 	}

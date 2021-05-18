@@ -9,4 +9,4 @@ build:
     - go
 
 run:
-  web: rudeus01
+  worker: rudeus01

@@ -24,8 +24,8 @@ func HandleTextMessage(message *tg.Message) {
 	} else if bc.IsCommand(&message.Text) {
 		//log.Println("Is HERE!")
 		bc.HandleCommand(message)
-	} else {
-		//log.Println("In ELSeE!")
-	}
+	} //else {
+	//log.Println("In ELSeE!")
+	//}
 
 }

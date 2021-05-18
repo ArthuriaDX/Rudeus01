@@ -23,6 +23,7 @@ type gnuTranslate struct {
 }
 
 type WotoTr struct {
+	UserText       string
 	OriginalText   string
 	TranslatedText string
 	From           string

@@ -9,7 +9,7 @@ const (
 	PORT_ERROR            = `Couldn't find PORT value.`
 	TOKEN_ERROR           = `No token provided! Cannot run app!`
 	INVALID_API           = `Error! Couldn't resolve API!`
-	INVALID_ENGINE        = `Error! Engine has no permission to start!`
+	INVALID_ENGINE        = `Error! Agent has no permission to start!`
 	ALREADY_RUNNING       = `Already running the app!`
 	WOTO_CLIENT_ERROR     = `Couldn't generate woto client!`
 	GET_WCONFIG_ERROR     = `Couldn't get raw in GetWotoConfiguration method!`

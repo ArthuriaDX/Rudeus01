@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/ALiwoto/rudeus01/wotoPacks/wotoActions/plugins/wotoTranslate/wotoLang"
 	ws "github.com/ALiwoto/rudeus01/wotoPacks/wotoSecurity/wotoStrings"
 	wv "github.com/ALiwoto/rudeus01/wotoPacks/wotoValues"
 )
@@ -37,17 +38,24 @@ func Translate(lang *Lang, to, text string) *WotoTr {
 	}
 
 	l1 := lang.Data.Detections[wv.BaseIndex]
+	uText := wv.EMPTY
+	for _, c := range text {
+		uText += string(c)
+	}
 
 	text = trGoogle(l1.TheLang, to, text)
 	w := WotoTr{
+		UserText:     uText,
 		OriginalText: text,
 		From:         l1.TheLang,
 		To:           to,
 	}
 
-	parseGData(&w)
+	tw := parseGData(&w)
+	//log.Println("The Origin: ", tw.OriginalText)
+	//log.Println("after after bad end:", tw.TranslatedText)
 
-	return &w
+	return tw
 }
 
 func TrGnuTxt(fr, to, text string) string {
@@ -73,7 +81,7 @@ func TrGnuTxt(fr, to, text string) string {
 		return errTrGnuText
 	}
 
-	if ws.IsEmpty(&g.Err) {
+	if !ws.IsEmpty(&g.Err) {
 		log.Println(g.Err)
 		return errTrGnuText
 	}
@@ -81,7 +89,7 @@ func TrGnuTxt(fr, to, text string) string {
 	return g.Result
 }
 
-func parseGData(wTr *WotoTr) {
+func parseGData(wTr *WotoTr) *WotoTr {
 	text := wTr.OriginalText
 	test := ws.Split(text, wv.BracketOpen, wv.Bracketclose)
 	original := make([]string, wv.BaseIndex)
@@ -137,6 +145,21 @@ func parseGData(wTr *WotoTr) {
 	strs := parseGparams(original, wTr)
 
 	arrangeParams(strs, wTr)
+	if wTr.WrongFrom {
+		text = trGoogle(wTr.From, wTr.To, wTr.UserText)
+		log.Println("After TRGOOGLE: ", text)
+		w := WotoTr{
+			OriginalText: text,
+			From:         wTr.From,
+			To:           wTr.To,
+		}
+		wTr = &w
+
+		parseGData(wTr)
+		log.Println("After bad end: ", wTr.TranslatedText)
+		return &w
+	}
+	return wTr
 }
 
 func parseGparams(value []string, wTr *WotoTr) []string {
@@ -230,16 +253,24 @@ func parseGparams(value []string, wTr *WotoTr) []string {
 	return final
 }
 
-func arrangeParams(values []string, wTr *WotoTr) *WotoTr {
+func arrangeParams(values []string, wTr *WotoTr) {
 	index := wv.BaseIndex
-	for _, current := range values {
-		//if i == wv.BaseIndex {
-		// TODO
-		//}
+	for i, current := range values {
+		if i == wv.BaseIndex {
+			if wotoLang.IsLang(current) {
+				if current != wTr.From {
+					wTr.WrongFrom = true
+					wTr.From = current
+					return
+				}
+			}
+		}
 		if strings.Contains(current, WrongNessOpen) {
 			wTr.HasWrongNess = true
 			current = strings.ReplaceAll(current, WrongNessOpen, wv.EMPTY)
 			current = strings.ReplaceAll(current, WrongNessClose, wv.EMPTY)
+			current = strings.ReplaceAll(current, WrongNessClose, wv.EMPTY)
+			current = strings.ReplaceAll(current, QuetUnicode, wv.SingleQ)
 			current = strings.TrimPrefix(current, wv.BackSlash)
 			current = strings.ReplaceAll(current, wv.BackSlash, wv.EMPTY)
 			wTr.CorrectedValue = current
@@ -250,14 +281,18 @@ func arrangeParams(values []string, wTr *WotoTr) *WotoTr {
 				} else {
 					current = strings.TrimPrefix(current, wv.N_ESCAPE)
 					current = strings.TrimSuffix(current, wv.N_ESCAPE)
+					current += wv.Point
 				}
 			}
+
+			current = strings.ReplaceAll(current, ThreeE, wv.EMPTY)
+			current = strings.ReplaceAll(current, QuetUnicode, wv.SingleQ)
+			current = strings.ReplaceAll(current, CeeE, wv.EMPTY)
+			current = strings.ReplaceAll(current, wv.DoubleBackSlash, wv.EMPTY)
+			current = strings.ReplaceAll(current, wv.BackSlash, wv.EMPTY)
 			wTr.TranslatedText += current
 		}
 	}
-	// TODO!
-	//wTr.TranslatedText = strings.Join(values, wv.N_ESCAPE)
-	return wTr
 }
 
 // trGAuto will translate the `text`

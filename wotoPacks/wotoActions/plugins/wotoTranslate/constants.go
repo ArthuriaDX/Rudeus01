@@ -159,6 +159,9 @@ const (
 	MiddleWave     = DoubleQSP + DoubleQS
 	WrongNessOpen  = "\\u003cb\\\\u003e\\\\u003ci\\\\u003e"
 	WrongNessClose = "\\\\u003c/i\\\\u003e\\\\u003c/b\\\\u003e"
+	ThreeE         = wv.DoubleBackSlash + "u003e"
+	CeeE           = wv.DoubleBackSlash + "u003c"
+	QuetUnicode    = "u0026#39;"
 )
 
 const (

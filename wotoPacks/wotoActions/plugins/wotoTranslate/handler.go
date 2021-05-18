@@ -1,7 +1,6 @@
 package wotoTranslate
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/ALiwoto/rudeus01/wotoPacks/appSettings"
@@ -21,6 +20,7 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 	send_pv := args.HasFlag(PV_FLAG, PRIVATE_FLAG)
 	flags := args.GetFlags()
 	is_reply := message.ReplyToMessage != nil
+	gnu := args.HasFlag("gnu")
 
 	if len(flags) == wv.BaseIndex {
 		return
@@ -33,10 +33,14 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 		if !ws.IsEmpty(&message.ReplyToMessage.Text) {
 			full = message.ReplyToMessage.Text
 		} else {
-			// we should check if the replied message has text or not,
-			// and since it doesn't have any text value, then we should not
-			// do any operations on it.
-			return
+			if !ws.IsEmpty(&message.ReplyToMessage.Caption) {
+				full = message.ReplyToMessage.Caption
+			} else {
+				// we should check if the replied message has text or not,
+				// and since it doesn't have any text value, then we should not
+				// do any operations on it.
+				return
+			}
 		}
 	} else {
 		// do not convert the flags to the morse code.
@@ -55,13 +59,15 @@ func TrHandler(message *tg.Message, args pTools.Arg) {
 
 	var str string
 
-	trl := Translate(l1, toLang, full)
-	if trl.HasWrongNess {
-		str += "Translated \"" + trl.CorrectedValue + "\" instead.\n"
+	if gnu {
+		str = TrGnuTxt(l1.Data.Detections[0].TheLang, toLang, full)
+	} else {
+		trl := Translate(l1, toLang, full)
+		if trl.HasWrongNess {
+			str += "Did you mean \"" + trl.CorrectedValue + "\"?\n"
+		}
+		str += trl.TranslatedText
 	}
-	str += trl.TranslatedText
-
-	str += "\n\nDE:\n" + fmt.Sprint(l1.Data.Detections)
 
 	sendTr(message, &str, is_reply, send_pv)
 }
