@@ -33,4 +33,4 @@ const (
 	AutoStr         = "auto"
 )
 
-const TICK_INTERVAL = 25 * time.Minute // seconds
+const TICK_INTERVAL = 25 * time.Second // seconds

@@ -318,7 +318,7 @@ func trGoogle(fr, to, text string) string {
 	req.Header.Set(originGKey, originGValue)
 	req.Header.Set(gDNTGKey, gDNTGValue)
 	req.Header.Set(connectionGKey, connectionGValue)
-	req.Header.Set(cookieGKey, cookieGValue)
+	//req.Header.Set(cookieGKey, cookieGValue)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

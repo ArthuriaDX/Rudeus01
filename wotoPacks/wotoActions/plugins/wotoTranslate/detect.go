@@ -22,7 +22,6 @@ func DetectLanguage(text string) *Lang {
 		contentTypeKey:    contentTypeValue,
 		originKey:         originValue,
 		connectionKey:     connectionValue,
-		cookieKey:         cookieValue,
 		teKey:             teValue,
 		qKey:              text,
 	}
